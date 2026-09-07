@@ -8,6 +8,7 @@ import {
   CalendarDays,
   X,
   ArrowRight,
+  Clock,
 } from "lucide-react";
 
 export default function MeetingActions() {
@@ -16,6 +17,13 @@ export default function MeetingActions() {
   const [showJoinModal, setShowJoinModal] = useState(false);
   const [meetingId, setMeetingId] = useState("");
   const [joinError, setJoinError] = useState("");
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [scheduleTitle, setScheduleTitle] = useState("");
+  const [scheduleDate, setScheduleDate] = useState("");
+  const [scheduleTime, setScheduleTime] = useState("");
+  const [scheduleError, setScheduleError] = useState("");
+  const [scheduleSuccess, setScheduleSuccess] = useState("");
+
 
   const createMeeting = async () => {
     try {
@@ -86,6 +94,68 @@ export default function MeetingActions() {
     }
   };
 
+  const scheduleMeeting = async () => {
+    if (!scheduleTitle.trim()) {
+      setScheduleError("Please enter a meeting title.");
+      return;
+    }
+
+    if (!scheduleDate || !scheduleTime) {
+      setScheduleError("Please select a date and time.");
+      return;
+    }
+
+    const scheduledAt = `${scheduleDate}T${scheduleTime}:00`;
+
+    try {
+      setScheduleError("");
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/meetings/schedule",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: scheduleTitle.trim(),
+            scheduled_at: scheduledAt,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail || "Failed to schedule meeting"
+        );
+      }
+
+      setScheduleSuccess(
+        `Meeting scheduled successfully. Meeting ID: ${data.meeting_id}`
+      );
+
+      setScheduleTitle("");
+      setScheduleDate("");
+      setScheduleTime("");
+
+      // Refresh homepage data
+      window.dispatchEvent(
+        new Event("meeting-scheduled")
+      );
+
+    } catch (error) {
+      console.error("Schedule error:", error);
+
+      setScheduleError(
+        error instanceof Error
+          ? error.message
+          : "Unable to schedule meeting."
+      );
+    }
+  };
+
   return (
     <>
       <div className="meeting-actions">
@@ -127,7 +197,9 @@ export default function MeetingActions() {
         <button
           className="meeting-action"
           onClick={() => {
-            alert("Schedule Meeting coming next.");
+            setShowScheduleModal(true);
+            setScheduleError("");
+            setScheduleSuccess("");
           }}
         >
           <span className="action-icon">
@@ -198,6 +270,95 @@ export default function MeetingActions() {
           </div>
         </div>
       )}
+
+      {showScheduleModal && (
+        <div
+          className="join-modal-overlay"
+          onClick={() => setShowScheduleModal(false)}
+        >
+          <div
+            className="join-modal schedule-modal"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              className="join-modal-close"
+              onClick={() => setShowScheduleModal(false)}
+            >
+              <X size={20} />
+            </button>
+
+            <div className="join-modal-icon">
+              <CalendarDays size={26} />
+            </div>
+
+            <h2>Schedule Meeting</h2>
+
+            <p className="join-modal-description">
+              Schedule a meeting for a future date and time.
+            </p>
+
+            <label>Meeting Title</label>
+
+            <input
+              type="text"
+              value={scheduleTitle}
+              onChange={(event) => {
+                setScheduleTitle(event.target.value);
+                setScheduleError("");
+              }}
+              placeholder="Enter meeting title"
+            />
+
+            <label className="schedule-label">
+              Date
+            </label>
+
+            <input
+              type="date"
+              value={scheduleDate}
+              min={new Date().toISOString().split("T")[0]}
+              onChange={(event) => {
+                setScheduleDate(event.target.value);
+                setScheduleError("");
+              }}
+            />
+
+            <label className="schedule-label">
+              Time
+            </label>
+
+            <input
+              type="time"
+              value={scheduleTime}
+              onChange={(event) => {
+                setScheduleTime(event.target.value);
+                setScheduleError("");
+              }}
+            />
+
+            {scheduleError && (
+              <p className="join-error">
+                {scheduleError}
+              </p>
+            )}
+
+            {scheduleSuccess && (
+              <p className="schedule-success">
+                {scheduleSuccess}
+              </p>
+            )}
+
+            <button
+              className="join-submit"
+              onClick={scheduleMeeting}
+            >
+              Schedule Meeting
+              <Clock size={18} />
+            </button>
+          </div>
+        </div>
+      )}
+      
     </>
   );
 }

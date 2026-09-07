@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
-
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-
 from app.database import Base
 
 
@@ -29,7 +27,12 @@ class Meeting(Base):
         default="Instant Meeting"
     )
 
+    scheduled_at = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
     created_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc)
     )
