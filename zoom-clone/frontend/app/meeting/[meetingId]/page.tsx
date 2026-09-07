@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ParticipantPanel from "@/components/ParticipantPanel";
+import MeetingInfoModal from "@/components/MeetingInfoModal";
 
 import {
   LiveKitRoom,
@@ -20,6 +21,7 @@ import {
   Shield,
   Lock,
   Unlock,
+  Info,
 } from "lucide-react";
 
 import "@livekit/components-styles";
@@ -78,11 +80,11 @@ export default function MeetingPage() {
   const [isHost, setIsHost] = useState(false);
   const [endingMeeting, setEndingMeeting] = useState(false);
 
-  const [meetingTitle, setMeetingTitle] =
-    useState("Meeting");
-
+  const [meetingTitle, setMeetingTitle] = useState("Meeting");
+  const [meetingData, setMeetingData] = useState<any>(null);
   const [copied, setCopied] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
+  const [showMeetingInfo, setShowMeetingInfo] = useState(false);
   const [isMeetingLocked, setIsMeetingLocked] = useState(false);
   const [lockingMeeting, setLockingMeeting] = useState(false);
 
@@ -141,6 +143,8 @@ export default function MeetingPage() {
 
         const meeting =
           await meetingResponse.json();
+
+        setMeetingData(meeting);
 
         setMeetingTitle(
           meeting.title || "Meeting"
@@ -587,6 +591,18 @@ const toggleMeetingLock = async () => {
           </button>
 
           <button
+            type="button"
+            className="meeting-info-button"
+            onClick={() =>
+              setShowMeetingInfo(true)
+            }
+            title="Meeting information"
+          >
+            <Info size={16} />
+            Info
+          </button>
+
+          <button
             className="invite-button"
             onClick={copyInvitation}
           >
@@ -640,6 +656,20 @@ const toggleMeetingLock = async () => {
             <ParticipantPanel
               isHost={isHost}
               onClose={() => setShowParticipants(false)}
+            />
+          )}
+
+          {showMeetingInfo && (
+            <MeetingInfoModal
+              meetingTitle={meetingTitle}
+              meetingId={meetingId}
+              meetingLocked={isMeetingLocked}
+              startedAt={meetingData?.started_at}
+              endedAt={meetingData?.ended_at}
+              isHost={isHost}
+              onClose={() =>
+                setShowMeetingInfo(false)
+              }
             />
           )}
 

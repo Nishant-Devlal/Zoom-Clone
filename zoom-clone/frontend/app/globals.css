@@ -4133,3 +4133,384 @@ button.secure-badge:disabled {
   font-size: 11px;
   font-weight: 500;
 }
+
+/* ========================================
+   MEETING INFO BUTTON
+======================================== */
+
+.meeting-info-button {
+  height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.meeting-info-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* ========================================
+   MEETING INFO OVERLAY
+======================================== */
+
+.meeting-info-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  backdrop-filter: blur(3px);
+}
+
+
+/* ========================================
+   MEETING INFO MODAL
+======================================== */
+
+.meeting-info-modal {
+  width: 100%;
+  max-width: 520px;
+
+  max-height: 90vh;
+  overflow-y: auto;
+
+  background: #1c1c1c;
+  color: #ffffff;
+
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5);
+
+  animation: meetingInfoAppear 0.18s ease-out;
+}
+
+@keyframes meetingInfoAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* ========================================
+   HEADER
+======================================== */
+
+.meeting-info-header {
+  min-height: 72px;
+
+  padding: 16px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.1);
+}
+
+.meeting-info-header h2 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.meeting-info-header p {
+  margin: 4px 0 0;
+
+  color: #9d9d9d;
+  font-size: 12px;
+}
+
+.meeting-info-close {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+.meeting-info-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ========================================
+   CONTENT
+======================================== */
+
+.meeting-info-content {
+  padding: 6px 20px;
+}
+
+.meeting-info-section {
+  padding: 15px 0;
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.07);
+}
+
+.meeting-info-section:last-child {
+  border-bottom: none;
+}
+
+.meeting-info-label {
+  margin-bottom: 7px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #9d9d9d;
+
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.meeting-info-value {
+  color: #ffffff;
+
+  font-size: 14px;
+}
+
+.meeting-info-title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.meeting-info-main-value {
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* ========================================
+   COPY ROW
+======================================== */
+
+.meeting-info-copy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+.meeting-info-copy-button {
+  flex-shrink: 0;
+
+  height: 32px;
+
+  padding: 0 10px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.12);
+
+  border-radius: 6px;
+
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 6px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.meeting-info-copy-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+  border-color:
+    rgba(255, 255, 255, 0.2);
+}
+
+
+/* ========================================
+   SECURITY STATUS
+======================================== */
+
+.meeting-info-status {
+  display: inline-flex;
+
+  align-items: center;
+  gap: 7px;
+
+  padding: 6px 9px;
+
+  border-radius: 6px;
+
+  background: rgba(255, 255, 255, 0.06);
+
+  color: #dddddd;
+
+  font-size: 13px;
+}
+
+
+/* ========================================
+   MEETING LINK
+======================================== */
+
+.meeting-info-link-box {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 9px 10px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.1);
+
+  border-radius: 7px;
+
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.meeting-info-link-box span {
+  flex: 1;
+
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #cccccc;
+
+  font-size: 12px;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.meeting-info-footer {
+  padding: 14px 20px;
+
+  border-top: 1px solid
+    rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  justify-content: flex-end;
+}
+
+.meeting-info-done-button {
+  height: 36px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 7px;
+
+  background: #2d8cff;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.meeting-info-done-button:hover {
+  background: #1f7ce0;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+  .meeting-info-overlay {
+    padding: 12px;
+  }
+
+  .meeting-info-modal {
+    max-height: 94vh;
+
+    border-radius: 12px;
+  }
+
+  .meeting-info-header {
+    padding: 14px 16px;
+  }
+
+  .meeting-info-content {
+    padding: 4px 16px;
+  }
+
+  .meeting-info-footer {
+    padding: 12px 16px;
+  }
+
+  .meeting-info-link-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .meeting-info-link-box span {
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .meeting-info-copy-button {
+    align-self: flex-end;
+  }
+}
