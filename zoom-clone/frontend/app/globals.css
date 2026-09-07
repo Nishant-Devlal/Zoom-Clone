@@ -4514,3 +4514,1437 @@ button.secure-badge:disabled {
     align-self: flex-end;
   }
 }
+
+/* =========================================================
+   ZOOM WORKPLACE HOME DASHBOARD
+   ========================================================= */
+
+.zoom-home-page {
+  min-height: 100vh;
+  background: #f4f5f7;
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+
+.zoom-navbar {
+  height: 60px;
+  padding: 0 8px 0 26px;
+
+  background: #e9edf1;
+  border: none;
+  box-shadow: none;
+
+  display: flex;
+  align-items: center;
+}
+
+.zoom-navbar-left {
+  width: 370px;
+
+  display: flex;
+  align-items: center;
+  gap: 40px;
+
+  flex-shrink: 0;
+}
+
+.zoom-workplace-logo {
+  width: 90px;
+
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1;
+}
+
+.zoom-workplace-logo span {
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #33363d;
+
+  letter-spacing: -0.5px;
+}
+
+.zoom-workplace-logo strong {
+  margin-top: 1px;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #292c33;
+}
+
+.zoom-navigation-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.zoom-navigation-controls button {
+  width: 28px;
+  height: 28px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  color: #8b929b;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+
+.zoom-navigation-controls button:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: #555b64;
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.zoom-navbar-search {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+
+  min-width: 0;
+}
+
+.zoom-search-box {
+  width: 483px;
+  height: 37px;
+
+  padding: 0 14px;
+
+  border-radius: 9px;
+
+  background: #d2d7dd;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #737b86;
+}
+
+.zoom-search-box svg {
+  flex-shrink: 0;
+}
+
+.zoom-search-box input {
+  flex: 1;
+
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #3c4149;
+
+  font-size: 14px;
+
+  text-align: center;
+}
+
+.zoom-search-box input::placeholder {
+  color: #6e7783;
+}
+
+.search-shortcut {
+  display: none;
+}
+
+/* =========================================================
+   NAVBAR RIGHT
+   ========================================================= */
+
+.zoom-navbar-right {
+  width: 270px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 14px;
+
+  flex-shrink: 0;
+}
+
+.upgrade-button {
+  height: 37px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #0b74de;
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.upgrade-button:hover {
+  background: #0966c4;
+}
+
+.zoom-navbar-profile {
+  position: relative;
+
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+.zoom-navbar-profile .navbar-avatar {
+  width: 36px;
+  height: 36px;
+}
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.zoom-sidebar {
+  width: 88px;
+
+  padding: 2px 7px 10px;
+
+  background: #e2e7eb;
+
+  border: none;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.zoom-sidebar-nav {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.zoom-sidebar-item {
+  position: relative;
+
+  width: 100%;
+  height: 61px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #242932;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 400;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.zoom-sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.zoom-sidebar-item.active {
+  background: #ffffff;
+  color: #1f2329;
+
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.zoom-sidebar-item svg {
+  width: 20px;
+  height: 20px;
+}
+
+.zoom-more-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.zoom-more-button {
+  font-family: inherit;
+}
+
+/* More popup */
+
+.zoom-more-menu {
+  position: absolute;
+
+  left: 82px;
+  bottom: 0;
+
+  width: 175px;
+
+  padding: 6px;
+
+  background: white;
+
+  border: 1px solid #dfe3e7;
+  border-radius: 9px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.14);
+
+  z-index: 500;
+}
+
+.zoom-more-menu button {
+  width: 100%;
+  height: 38px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 0 10px;
+
+  color: #333840;
+
+  font-size: 13px;
+
+  cursor: pointer;
+  text-align: left;
+}
+
+.zoom-more-menu button:hover {
+  background: #f3f5f7;
+}
+
+.zoom-sidebar-bottom {
+  width: 100%;
+
+  margin-top: auto;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.zoom-dashboard-content {
+  max-width: none;
+
+  padding: 70px 30px 25px;
+
+  margin: 0;
+
+  background: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: calc(100vh - 60px);
+}
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+
+.zoom-welcome {
+  text-align: center;
+
+  margin-bottom: 28px;
+}
+
+.zoom-welcome h1 {
+  margin: 0;
+
+  color: #252735;
+
+  font-size: 45px;
+  line-height: 1.05;
+
+  font-weight: 500;
+
+  letter-spacing: -1.5px;
+}
+
+.zoom-welcome p {
+  margin: 9px 0 0;
+
+  color: #6f7782;
+
+  font-size: 17px;
+  font-weight: 400;
+}
+
+/* =========================================================
+   MEETING ACTIONS
+   ========================================================= */
+
+.zoom-dashboard-actions {
+  width: 390px;
+
+  margin-bottom: 27px;
+}
+
+.zoom-dashboard-actions .meeting-actions {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  gap: 35px;
+
+  margin: 0;
+}
+
+.zoom-dashboard-actions .meeting-action {
+  min-height: auto;
+
+  width: 100px;
+
+  padding: 0;
+
+  border: none;
+  background: transparent;
+
+  border-radius: 0;
+
+  box-shadow: none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: center;
+
+  transform: none;
+}
+
+.zoom-dashboard-actions .meeting-action:hover {
+  transform: none;
+
+  border: none;
+
+  box-shadow: none;
+
+  background: transparent;
+}
+
+.zoom-dashboard-actions .meeting-action-icon,
+.zoom-dashboard-actions .action-icon {
+  width: 63px;
+  height: 63px;
+
+  border-radius: 20px;
+
+  background: #1677ed;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-dashboard-actions .meeting-action.primary .action-icon {
+  background: #ff6b2c;
+}
+
+.zoom-dashboard-actions .meeting-action h3,
+.zoom-dashboard-actions .meeting-action strong {
+  margin: 0;
+
+  color: #626a75;
+
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.zoom-dashboard-actions .meeting-action p,
+.zoom-dashboard-actions .meeting-action small {
+  display: none;
+}
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+.zoom-calendar-card {
+  width: 670px;
+  max-width: 100%;
+
+  background: white;
+
+  border: 1px solid #e1e5e9;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+/* Calendar info banner */
+
+.calendar-connect-banner {
+  margin: 10px 10px 0;
+
+  min-height: 76px;
+
+  padding: 12px 17px;
+
+  border: 1px solid #b7d6ff;
+
+  border-radius: 11px;
+
+  background: #f7fbff;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+}
+
+.calendar-info-icon {
+  width: 20px;
+  height: 20px;
+
+  flex-shrink: 0;
+
+  border: 2px solid #3788f5;
+
+  border-radius: 50%;
+
+  color: #3788f5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.calendar-connect-banner p {
+  margin: 0;
+
+  color: #202731;
+
+  font-size: 14px;
+
+  line-height: 1.35;
+}
+
+.calendar-connect-banner button {
+  padding: 0;
+
+  border: none;
+
+  background: transparent;
+
+  color: #0879ed;
+
+  font-size: inherit;
+
+  cursor: pointer;
+}
+
+/* Calendar heading */
+
+.calendar-heading {
+  height: 59px;
+
+  padding: 0 20px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+}
+
+.calendar-heading strong {
+  color: #17191e;
+
+  font-size: 15px;
+
+  font-weight: 700;
+}
+
+.calendar-external-button {
+  position: absolute;
+
+  right: 17px;
+
+  border: none;
+  background: transparent;
+
+  color: #68717d;
+
+  font-size: 21px;
+
+  cursor: pointer;
+}
+
+/* Toolbar */
+
+.calendar-toolbar {
+  height: 47px;
+
+  padding: 0 17px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+}
+
+.today-button {
+  height: 28px;
+
+  padding: 0 10px;
+
+  border: 1px solid #cdd3d9;
+  border-radius: 15px;
+
+  background: white;
+
+  color: #3e454e;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.today-button:hover {
+  background: #f5f6f7;
+}
+
+.calendar-small-icon {
+  font-size: 12px;
+}
+
+.calendar-navigation {
+  display: flex;
+
+  align-items: center;
+
+  margin-left: 8px;
+}
+
+.calendar-navigation button {
+  width: 34px;
+  height: 32px;
+
+  border: none;
+  background: transparent;
+
+  color: #68717d;
+
+  font-size: 25px;
+
+  cursor: pointer;
+}
+
+.calendar-navigation button:hover {
+  background: #f2f4f6;
+
+  border-radius: 7px;
+}
+
+.calendar-more-button {
+  margin-left: auto;
+
+  border: none;
+  background: transparent;
+
+  color: #68717d;
+
+  font-size: 14px;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+}
+
+/* =========================================================
+   UPCOMING MEETINGS INSIDE CALENDAR
+   ========================================================= */
+
+.zoom-calendar-meetings {
+  min-height: 238px;
+
+  overflow: hidden;
+}
+
+.zoom-calendar-meetings .upcoming-section {
+  margin: 0;
+}
+
+.zoom-calendar-meetings .section-header {
+  display: none;
+}
+
+.zoom-calendar-meetings .upcoming-list {
+  gap: 0;
+}
+
+.zoom-calendar-meetings .upcoming-card {
+  border: none;
+  border-radius: 0;
+
+  border-bottom: 1px solid #edf0f2;
+
+  padding: 18px 20px;
+
+  box-shadow: none;
+}
+
+.zoom-calendar-meetings .upcoming-empty {
+  min-height: 238px;
+
+  border: none;
+  border-radius: 0;
+
+  background: white;
+}
+
+.zoom-calendar-meetings .upcoming-empty h3 {
+  font-size: 14px;
+  font-weight: 400;
+
+  color: #5f6670;
+}
+
+.zoom-calendar-meetings .upcoming-empty p {
+  display: none;
+}
+
+/* Hide the empty-state icon slightly */
+
+.zoom-calendar-meetings .upcoming-empty svg {
+  width: 92px;
+  height: 92px;
+
+  opacity: 0.55;
+}
+
+/* =========================================================
+   CALENDAR FOOTER
+   ========================================================= */
+
+.calendar-footer {
+  height: 44px;
+
+  border-top: 1px solid #e5e7eb;
+
+  display: flex;
+  align-items: center;
+}
+
+.calendar-footer button {
+  height: 100%;
+
+  padding: 0 18px;
+
+  border: none;
+  background: transparent;
+
+  color: #454c55;
+
+  font-size: 13px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  cursor: pointer;
+}
+
+.calendar-footer button:hover {
+  color: #0879ed;
+}
+
+.calendar-footer button span {
+  font-size: 19px;
+}
+
+/* =========================================================
+   HIDE HISTORY FROM HOME
+   ========================================================= */
+
+.zoom-home-history {
+  display: none;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .zoom-navbar-left {
+    width: auto;
+
+    gap: 15px;
+  }
+
+  .zoom-navigation-controls {
+    display: none;
+  }
+
+  .zoom-navbar-right {
+    width: auto;
+  }
+
+  .zoom-navbar-search {
+    padding: 0 15px;
+  }
+
+  .zoom-search-box {
+    width: 100%;
+  }
+
+  .zoom-calendar-card {
+    width: 670px;
+  }
+}
+
+@media (max-width: 640px) {
+
+  .zoom-navbar {
+    padding: 0 12px;
+  }
+
+  .zoom-workplace-logo {
+    width: 75px;
+  }
+
+  .zoom-workplace-logo strong {
+    font-size: 14px;
+  }
+
+  .upgrade-button {
+    display: none;
+  }
+
+  .zoom-navbar-search {
+    padding: 0 8px;
+  }
+
+  .zoom-search-box {
+    height: 35px;
+  }
+
+  .zoom-dashboard-content {
+    padding: 45px 12px 20px;
+  }
+
+  .zoom-welcome h1 {
+    font-size: 36px;
+  }
+
+  .zoom-welcome p {
+    font-size: 15px;
+  }
+
+  .zoom-dashboard-actions {
+    width: 100%;
+  }
+
+  .zoom-dashboard-actions .meeting-actions {
+    gap: 15px;
+  }
+
+  .zoom-dashboard-actions .meeting-action {
+    width: 90px;
+  }
+
+  .zoom-calendar-card {
+    width: 100%;
+  }
+
+  .zoom-sidebar {
+    display: none;
+  }
+
+}
+/* =========================================================
+   FINAL ZOOM HOME UI - SIZE + SPACING FIX
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   NAVBAR
+   --------------------------------------------------------- */
+
+.zoom-navbar {
+  height: 58px;
+  min-height: 58px;
+  padding: 0 14px 0 28px;
+}
+
+.zoom-workplace-logo span {
+  font-size: 14px;
+}
+
+.zoom-workplace-logo strong {
+  font-size: 16px;
+}
+
+.zoom-navbar-left {
+  width: 350px;
+  gap: 32px;
+}
+
+.zoom-navigation-controls {
+  gap: 0;
+}
+
+.zoom-navigation-controls button {
+  width: 27px;
+  height: 27px;
+}
+
+.zoom-navigation-controls button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.zoom-search-box {
+  width: 470px;
+  height: 35px;
+  border-radius: 9px;
+}
+
+.zoom-search-box svg {
+  width: 19px;
+  height: 19px;
+}
+
+.zoom-search-box input {
+  font-size: 13px;
+}
+
+.zoom-navbar-right {
+  width: 245px;
+  gap: 12px;
+}
+
+.upgrade-button {
+  height: 36px;
+  padding: 0 17px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+
+/* ---------------------------------------------------------
+   PROFILE AVATAR
+   --------------------------------------------------------- */
+
+/*
+   IMPORTANT:
+   Force BOTH the avatar container and actual image
+   to be perfectly circular.
+*/
+
+.zoom-navbar-profile {
+  width: 36px;
+  height: 36px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  background: transparent;
+}
+
+.zoom-navbar-profile .navbar-avatar {
+  width: 36px;
+  height: 36px;
+
+  min-width: 36px;
+  min-height: 36px;
+
+  border-radius: 50% !important;
+
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoom-navbar-profile .navbar-avatar-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 50% !important;
+}
+
+
+/* Profile dropdown avatar */
+
+.navbar-profile-menu .navbar-avatar.large {
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+  min-height: 42px;
+
+  border-radius: 50% !important;
+
+  overflow: hidden;
+}
+
+.navbar-profile-menu .navbar-avatar.large img,
+.navbar-profile-menu .navbar-avatar-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  border-radius: 50% !important;
+}
+
+
+/* ---------------------------------------------------------
+   SIDEBAR
+   --------------------------------------------------------- */
+
+.zoom-sidebar {
+  width: 86px;
+
+  height: calc(100vh - 58px);
+  min-height: calc(100vh - 58px);
+
+  padding: 4px 7px 8px;
+
+  box-sizing: border-box;
+
+  background: #e2e7eb;
+
+  flex-shrink: 0;
+}
+
+.zoom-sidebar-nav {
+  gap: 2px;
+}
+
+.zoom-sidebar-item {
+  height: 57px;
+
+  border-radius: 9px;
+
+  gap: 4px;
+
+  font-size: 10px;
+}
+
+.zoom-sidebar-item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.zoom-sidebar-bottom {
+  margin-top: auto;
+  width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   MAIN CONTENT
+   --------------------------------------------------------- */
+
+.zoom-dashboard-content {
+  padding: 52px 25px 22px;
+
+  min-height: calc(100vh - 58px);
+
+  box-sizing: border-box;
+}
+
+
+/* ---------------------------------------------------------
+   CLOCK
+   --------------------------------------------------------- */
+
+.zoom-welcome {
+  margin-bottom: 24px;
+}
+
+.zoom-welcome h1 {
+  font-size: 38px;
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  letter-spacing: -1px;
+}
+
+.zoom-welcome p {
+  margin-top: 8px;
+
+  font-size: 15px;
+}
+
+
+/* ---------------------------------------------------------
+   MEETING ACTIONS
+   --------------------------------------------------------- */
+
+.zoom-dashboard-actions {
+  width: 360px;
+
+  margin-bottom: 25px;
+}
+
+.zoom-dashboard-actions .meeting-actions {
+  gap: 31px;
+}
+
+.zoom-dashboard-actions .meeting-action {
+  width: 92px;
+
+  gap: 8px;
+}
+
+.zoom-dashboard-actions .meeting-action-icon,
+.zoom-dashboard-actions .action-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 18px;
+}
+
+.zoom-dashboard-actions .meeting-action-icon svg,
+.zoom-dashboard-actions .action-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.zoom-dashboard-actions .meeting-action h3,
+.zoom-dashboard-actions .meeting-action strong {
+  font-size: 13px;
+
+  font-weight: 400;
+}
+
+
+/* ---------------------------------------------------------
+   CALENDAR CARD
+   --------------------------------------------------------- */
+
+.zoom-calendar-card {
+  width: 650px;
+
+  border-radius: 10px;
+}
+
+
+/* Calendar connection message */
+
+.calendar-connect-banner {
+  min-height: 68px;
+
+  margin: 9px 9px 0;
+
+  padding: 10px 15px;
+
+  gap: 13px;
+
+  border-radius: 10px;
+}
+
+.calendar-info-icon {
+  width: 19px;
+  height: 19px;
+
+  font-size: 12px;
+}
+
+.calendar-connect-banner p {
+  font-size: 13px;
+
+  line-height: 1.35;
+}
+
+
+/* ---------------------------------------------------------
+   CALENDAR HEADER
+   --------------------------------------------------------- */
+
+.calendar-heading {
+  height: 53px;
+
+  padding: 0 18px;
+}
+
+.calendar-heading strong {
+  font-size: 14px;
+}
+
+.calendar-external-button {
+  right: 16px;
+
+  font-size: 18px;
+}
+
+
+/* ---------------------------------------------------------
+   CALENDAR TOOLBAR
+   --------------------------------------------------------- */
+
+.calendar-toolbar {
+  height: 44px;
+
+  padding: 0 16px;
+}
+
+.today-button {
+  height: 27px;
+
+  padding: 0 9px;
+
+  font-size: 11px;
+}
+
+.calendar-navigation button {
+  width: 31px;
+  height: 30px;
+
+  font-size: 22px;
+}
+
+.calendar-more-button {
+  font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   UPCOMING MEETING CARD
+   --------------------------------------------------------- */
+
+.zoom-calendar-meetings {
+  min-height: 225px;
+}
+
+.zoom-calendar-meetings .upcoming-card {
+  padding: 15px 18px;
+
+  min-height: 120px;
+}
+
+.zoom-calendar-meetings .upcoming-card-main {
+  gap: 13px;
+}
+
+.zoom-calendar-meetings .upcoming-icon {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 13px;
+}
+
+.zoom-calendar-meetings .upcoming-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.zoom-calendar-meetings .upcoming-card h3 {
+  font-size: 15px;
+}
+
+.zoom-calendar-meetings .meeting-time {
+  font-size: 12px;
+
+  gap: 12px;
+
+  margin-top: 6px;
+}
+
+.zoom-calendar-meetings .meeting-id {
+  font-size: 11px;
+
+  margin-top: 5px;
+}
+
+.zoom-calendar-meetings .secondary-meeting-btn,
+.zoom-calendar-meetings .primary-meeting-btn {
+  padding: 8px 11px;
+
+  font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   CALENDAR FOOTER
+   --------------------------------------------------------- */
+
+.calendar-footer {
+  height: 40px;
+}
+
+.calendar-footer button {
+  padding: 0 17px;
+
+  font-size: 12px;
+}
+
+
+/* ---------------------------------------------------------
+   HIDE HISTORY ON HOME
+   --------------------------------------------------------- */
+
+.zoom-home-history {
+  display: none;
+}
+
+
+/* ---------------------------------------------------------
+   MAKE SIDEBAR SETTINGS ALWAYS FIT
+   --------------------------------------------------------- */
+
+.app-body {
+  min-height: calc(100vh - 58px);
+
+  height: calc(100vh - 58px);
+}
+
+
+/* ---------------------------------------------------------
+   MOBILE
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+  .zoom-navbar-left {
+    width: auto;
+    gap: 15px;
+  }
+
+  .zoom-navigation-controls {
+    display: none;
+  }
+
+  .zoom-navbar-right {
+    width: auto;
+  }
+
+  .zoom-navbar-search {
+    padding: 0 12px;
+  }
+
+  .zoom-search-box {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 640px) {
+
+  .zoom-navbar {
+    padding: 0 12px;
+  }
+
+  .zoom-workplace-logo {
+    width: 75px;
+  }
+
+  .zoom-workplace-logo strong {
+    font-size: 14px;
+  }
+
+  .upgrade-button {
+    display: none;
+  }
+
+  .zoom-dashboard-content {
+    padding: 38px 12px 20px;
+  }
+
+  .zoom-welcome h1 {
+    font-size: 34px;
+  }
+
+  .zoom-welcome p {
+    font-size: 14px;
+  }
+
+  .zoom-dashboard-actions {
+    width: 100%;
+  }
+
+  .zoom-dashboard-actions .meeting-actions {
+    gap: 12px;
+  }
+
+  .zoom-dashboard-actions .meeting-action {
+    width: 85px;
+  }
+
+  .zoom-calendar-card {
+    width: 100%;
+  }
+
+  .zoom-sidebar {
+    display: none;
+  }
+}

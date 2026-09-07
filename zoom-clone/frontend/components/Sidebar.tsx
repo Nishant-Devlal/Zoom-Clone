@@ -1,99 +1,140 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
 import {
   Home,
+  Video,
   MessageSquare,
+  MoreHorizontal,
+  Settings,
   CalendarDays,
-  Users,
   Clock3,
+  Users,
   FileText,
 } from "lucide-react";
 
-const workspaceItems = [
-  {
-    name: "Home",
-    href: "/",
-    icon: Home,
-  },
-  {
-    name: "Chat",
-    href: "/chat",
-    icon: MessageSquare,
-  },
-  {
-    name: "Meetings",
-    href: "/meetings",
-    icon: CalendarDays,
-  },
-  {
-    name: "Contacts",
-    href: "/contacts",
-    icon: Users,
-  },
-];
-
-const personalItems = [
-  {
-    name: "History",
-    href: "/history",
-    icon: Clock3,
-  },
-  {
-    name: "Files",
-    href: "/files",
-    icon: FileText,
-  },
-];
+import { useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const renderItem = (item: {
-    name: string;
-    href: string;
-    icon: React.ElementType;
-  }) => {
-    const Icon = item.icon;
+  const [showMore, setShowMore] = useState(false);
 
-    const isActive =
-      item.href === "/"
-        ? pathname === "/"
-        : pathname.startsWith(item.href);
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
+    }
 
-    return (
-      <Link
-        key={item.name}
-        href={item.href}
-        className={`sidebar-item ${isActive ? "active" : ""}`}
-      >
-        <Icon size={28} strokeWidth={1.8} />
-
-        <span>{item.name}</span>
-      </Link>
-    );
+    return pathname.startsWith(href);
   };
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar zoom-sidebar">
 
-      {/* WORKSPACE */}
-      <div className="sidebar-section">
-        <h3>WORKSPACE</h3>
+      {/* MAIN NAVIGATION */}
+      <nav className="zoom-sidebar-nav">
 
-        <nav>
-          {workspaceItems.map(renderItem)}
-        </nav>
-      </div>
+        <Link
+          href="/"
+          className={`zoom-sidebar-item ${
+            isActive("/") ? "active" : ""
+          }`}
+        >
+          <Home size={20} strokeWidth={1.8} />
+          <span>Home</span>
+        </Link>
 
-      {/* PERSONAL */}
-      <div className="sidebar-section personal-section">
-        <h3>PERSONAL</h3>
+        <Link
+          href="/meetings"
+          className={`zoom-sidebar-item ${
+            isActive("/meetings") ? "active" : ""
+          }`}
+        >
+          <Video size={20} strokeWidth={1.8} />
+          <span>Meetings</span>
+        </Link>
 
-        <nav>
-          {personalItems.map(renderItem)}
-        </nav>
+        <Link
+          href="/chat"
+          className={`zoom-sidebar-item ${
+            isActive("/chat") ? "active" : ""
+          }`}
+        >
+          <MessageSquare size={20} strokeWidth={1.8} />
+          <span>Chat</span>
+        </Link>
+
+        <div className="zoom-more-wrapper">
+
+          <button
+            type="button"
+            className={`zoom-sidebar-item zoom-more-button ${
+              showMore ? "active" : ""
+            }`}
+            onClick={() => setShowMore(!showMore)}
+          >
+            <MoreHorizontal
+              size={20}
+              strokeWidth={2}
+            />
+
+            <span>More</span>
+          </button>
+
+          {showMore && (
+            <div className="zoom-more-menu">
+
+              <button
+                type="button"
+                onClick={() => router.push("/contacts")}
+              >
+                <Users size={17} />
+                Contacts
+              </button>
+
+              <button
+                type="button"
+                onClick={() => router.push("/history")}
+              >
+                <Clock3 size={17} />
+                History
+              </button>
+
+              <button
+                type="button"
+                onClick={() => router.push("/files")}
+              >
+                <FileText size={17} />
+                Files
+              </button>
+
+            </div>
+          )}
+
+        </div>
+
+      </nav>
+
+      {/* SETTINGS AT BOTTOM */}
+      <div className="zoom-sidebar-bottom">
+
+        <Link
+          href="/settings"
+          className={`zoom-sidebar-item ${
+            isActive("/settings") ? "active" : ""
+          }`}
+        >
+          <Settings
+            size={20}
+            strokeWidth={1.8}
+          />
+
+          <span>Settings</span>
+        </Link>
+
       </div>
 
     </aside>

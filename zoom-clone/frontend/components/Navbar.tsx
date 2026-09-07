@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
 import {
   User,
   LogOut,
   Settings,
-  Bell,
   ChevronDown,
-  HelpCircle,
   Search,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
 } from "lucide-react";
 
 const API_URL = "http://127.0.0.1:8000";
@@ -24,51 +26,48 @@ interface UserProfile {
 export default function Navbar() {
   const router = useRouter();
 
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [showProfile, setShowProfile] = useState(false);
+  const [user, setUser] =
+    useState<UserProfile | null>(null);
 
-  // ---------------------------------------------------------
-  // Load user profile
-  // ---------------------------------------------------------
+  const [showProfile, setShowProfile] =
+    useState(false);
 
   useEffect(() => {
     const loadProfile = async () => {
-      const token = localStorage.getItem("access_token");
+      const token =
+        localStorage.getItem("access_token");
 
-      if (!token) {
-        return;
-      }
+      if (!token) return;
 
       try {
-        const response = await fetch(`${API_URL}/api/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${API_URL}/api/profile`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        if (!response.ok) {
-          return;
-        }
+        if (!response.ok) return;
 
-        const data: UserProfile = await response.json();
+        const data: UserProfile =
+          await response.json();
 
         setUser(data);
 
-        // Keep localStorage user information updated
         localStorage.setItem(
           "user",
-          JSON.stringify({
-            id: data.id,
-            name: data.name,
-            email: data.email,
-            profile_picture: data.profile_picture,
-          })
+          JSON.stringify(data)
         );
       } catch (error) {
-        console.error("Failed to load profile:", error);
+        console.error(
+          "Failed to load profile:",
+          error
+        );
 
-        // Fallback to localStorage
-        const storedUser = localStorage.getItem("user");
+        const storedUser =
+          localStorage.getItem("user");
 
         if (storedUser) {
           try {
@@ -83,10 +82,6 @@ export default function Navbar() {
     loadProfile();
   }, []);
 
-  // ---------------------------------------------------------
-  // Logout
-  // ---------------------------------------------------------
-
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
@@ -94,17 +89,17 @@ export default function Navbar() {
     router.push("/login");
   };
 
-  // ---------------------------------------------------------
-  // Profile image component
-  // ---------------------------------------------------------
-
   const ProfileAvatar = ({
     large = false,
   }: {
     large?: boolean;
   }) => {
     return (
-      <div className={`navbar-avatar ${large ? "large" : ""}`}>
+      <div
+        className={`navbar-avatar ${
+          large ? "large" : ""
+        }`}
+      >
         {user?.profile_picture ? (
           <img
             src={`${API_URL}${user.profile_picture}`}
@@ -112,91 +107,103 @@ export default function Navbar() {
             className="navbar-avatar-image"
           />
         ) : (
-          user?.name?.charAt(0).toUpperCase() || "U"
+          user?.name
+            ?.charAt(0)
+            .toUpperCase() || "U"
         )}
       </div>
     );
   };
 
   return (
-    <header className="navbar">
+    <header className="navbar zoom-navbar">
 
-      {/* -------------------------------------------------- */}
       {/* LEFT */}
-      {/* -------------------------------------------------- */}
+      <div className="zoom-navbar-left">
 
-      <div className="navbar-left">
-        <div className="zoom-logo">
-          <span className="zoom-logo-icon">Z</span>
-          <span className="zoom-logo-text">Zoom</span>
+        <div className="zoom-workplace-logo">
+          <span>zoom</span>
+          <strong>Workplace</strong>
         </div>
+
+        <div className="zoom-navigation-controls">
+
+          <button
+            type="button"
+            aria-label="Back"
+            onClick={() => router.back()}
+          >
+            <ChevronLeft size={21} />
+          </button>
+
+          <button
+            type="button"
+            aria-label="Forward"
+            onClick={() => router.forward()}
+          >
+            <ChevronRight size={21} />
+          </button>
+
+          <button
+            type="button"
+            aria-label="History"
+          >
+            <Clock3 size={19} />
+          </button>
+
+        </div>
+
       </div>
 
-      {/* -------------------------------------------------- */}
-      {/* CENTER */}
-      {/* -------------------------------------------------- */}
+      {/* CENTER SEARCH */}
+      <div className="zoom-navbar-search">
 
-      <div className="navbar-center">
-        <div className="search-box">
-          <Search size={18} />
+        <div className="zoom-search-box">
+
+          <Search size={19} />
+
           <input
             type="text"
             placeholder="Search"
           />
+
+          <span className="search-shortcut">
+            Ctrl+K
+          </span>
+
         </div>
+
       </div>
 
-      {/* -------------------------------------------------- */}
       {/* RIGHT */}
-      {/* -------------------------------------------------- */}
+      <div className="zoom-navbar-right">
 
-      <div className="navbar-right">
-
-        <button className="icon-button">
-          <HelpCircle size={20} />
+        <button
+          type="button"
+          className="upgrade-button"
+        >
+          Upgrade
         </button>
-
-        <button className="icon-button">
-          <Bell size={20} />
-          <span className="notification-dot" />
-        </button>
-
-        {/* Profile */}
 
         <div className="navbar-profile-wrapper">
 
           <button
-            className="navbar-profile-button"
-            onClick={() => setShowProfile(!showProfile)}
+            type="button"
+            className="zoom-navbar-profile"
+            onClick={() =>
+              setShowProfile(!showProfile)
+            }
           >
 
-            {/* Actual profile picture */}
             <ProfileAvatar />
 
-            <div className="navbar-user-info">
-              <strong>
-                {user?.name || "User"}
-              </strong>
-
-              <span>
-                {user?.email || ""}
-              </span>
-            </div>
-
-            <ChevronDown size={16} />
-
           </button>
-
-          {/* ------------------------------------------------ */}
-          {/* PROFILE DROPDOWN */}
-          {/* ------------------------------------------------ */}
 
           {showProfile && (
             <div className="navbar-profile-menu">
 
               <div className="profile-menu-header">
 
-                {/* Large profile picture */}
                 <ProfileAvatar large />
 
                 <div>
@@ -213,9 +220,8 @@ export default function Navbar() {
 
               <div className="profile-menu-divider" />
 
-              {/* Profile */}
-
               <button
+                type="button"
                 onClick={() => {
                   setShowProfile(false);
                   router.push("/profile");
@@ -225,9 +231,8 @@ export default function Navbar() {
                 Profile
               </button>
 
-              {/* Settings */}
-
               <button
+                type="button"
                 onClick={() => {
                   setShowProfile(false);
                   router.push("/settings");
@@ -239,9 +244,8 @@ export default function Navbar() {
 
               <div className="profile-menu-divider" />
 
-              {/* Logout */}
-
               <button
+                type="button"
                 className="logout-button"
                 onClick={handleLogout}
               >
@@ -255,6 +259,7 @@ export default function Navbar() {
         </div>
 
       </div>
+
     </header>
   );
 }
