@@ -46,6 +46,7 @@ app.mount(
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://zoom-clone-frontend-three.vercel.app",
 ]
 
 app.add_middleware(
