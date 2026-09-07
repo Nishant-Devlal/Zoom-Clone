@@ -27,15 +27,16 @@ export default function ParticipantPanel({
   isHost,
 }: ParticipantPanelProps) {
   const participants = useParticipants();
-
   const { localParticipant } = useLocalParticipant();
 
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [removing, setRemoving] = useState<string | null>(null);
+  const [muting, setMuting] = useState<string | null>(null);
+  const [mutingAll, setMutingAll] = useState(false);
 
-  // ------------------------------------------------
-  // GET PARTICIPANT NAME
-  // ------------------------------------------------
+  // =========================================================
+  // PARTICIPANT NAME
+  // =========================================================
 
   const getParticipantName = (participant: any) => {
     return (
@@ -45,12 +46,12 @@ export default function ParticipantPanel({
     );
   };
 
-  // ------------------------------------------------
-  // GET INITIALS
-  // ------------------------------------------------
+  // =========================================================
+  // INITIALS
+  // =========================================================
 
   const getInitials = (name: string) => {
-    const parts = name.trim().split(" ");
+    const parts = name.trim().split(/\s+/);
 
     if (parts.length === 1) {
       return parts[0].charAt(0).toUpperCase();
@@ -62,37 +63,69 @@ export default function ParticipantPanel({
     ).toUpperCase();
   };
 
-  // ------------------------------------------------
+  // =========================================================
   // MICROPHONE STATUS
-  // ------------------------------------------------
+  // =========================================================
 
   const isMicrophoneEnabled = (participant: any) => {
     const publication =
       participant.getTrackPublication("microphone");
 
     return (
-      publication?.isSubscribed !== false &&
-      publication?.isMuted !== true
+      publication?.isMuted !== true &&
+      publication != null
     );
   };
 
-  // ------------------------------------------------
+  // =========================================================
   // CAMERA STATUS
-  // ------------------------------------------------
+  // =========================================================
 
   const isCameraEnabled = (participant: any) => {
     const publication =
       participant.getTrackPublication("camera");
 
     return (
-      publication?.isSubscribed !== false &&
-      publication?.isMuted !== true
+      publication?.isMuted !== true &&
+      publication != null
     );
   };
 
-  // ------------------------------------------------
+  // =========================================================
+  // ERROR MESSAGE HELPER
+  // =========================================================
+
+  const getErrorMessage = (data: any, fallback: string) => {
+    if (typeof data?.detail === "string") {
+      return data.detail;
+    }
+
+    if (Array.isArray(data?.detail)) {
+      return data.detail
+        .map((item: any) => {
+          if (typeof item === "string") {
+            return item;
+          }
+
+          return (
+            item?.msg ||
+            item?.message ||
+            "Invalid request"
+          );
+        })
+        .join(", ");
+    }
+
+    if (typeof data?.message === "string") {
+      return data.message;
+    }
+
+    return fallback;
+  };
+
+  // =========================================================
   // REMOVE PARTICIPANT
-  // ------------------------------------------------
+  // =========================================================
 
   const removeParticipant = async (
     participantIdentity: string,
@@ -118,7 +151,6 @@ export default function ParticipantPanel({
         return;
       }
 
-      // Get meeting ID from URL
       const meetingId =
         window.location.pathname.split("/").pop();
 
@@ -149,8 +181,10 @@ export default function ParticipantPanel({
 
       if (!response.ok) {
         throw new Error(
-          data.detail ||
+          getErrorMessage(
+            data,
             "Failed to remove participant"
+          )
         );
       }
 
@@ -170,21 +204,246 @@ export default function ParticipantPanel({
           ? error.message
           : "Failed to remove participant"
       );
+
     } finally {
       setRemoving(null);
     }
   };
 
-  // ------------------------------------------------
+  // =========================================================
+  // MUTE ONE PARTICIPANT
+  // =========================================================
+
+  const muteParticipant = async (
+    participant: any,
+    participantName: string
+  ) => {
+    try {
+      const token =
+        localStorage.getItem("access_token");
+
+      if (!token) {
+        alert("You are not logged in.");
+        return;
+      }
+
+      const meetingId =
+        window.location.pathname.split("/").pop();
+
+      if (!meetingId) {
+        alert("Meeting ID not found.");
+        return;
+      }
+
+      const microphonePublication =
+        participant.getTrackPublication(
+          "microphone"
+        );
+
+      if (!microphonePublication) {
+        alert(
+          `${participantName} does not have a microphone track.`
+        );
+        return;
+      }
+
+      const trackSid =
+        microphonePublication.trackSid;
+
+      if (!trackSid) {
+        alert(
+          `Could not find ${participantName}'s microphone track.`
+        );
+        return;
+      }
+
+      setMuting(participant.identity);
+      setOpenMenu(null);
+
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/meetings/${meetingId}/mute-participant`,
+        {
+          method: "POST",
+
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type":
+              "application/x-www-form-urlencoded",
+          },
+
+          body: new URLSearchParams({
+            participant_identity:
+              participant.identity,
+
+            track_sid: trackSid,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          getErrorMessage(
+            data,
+            "Failed to mute participant"
+          )
+        );
+      }
+
+      console.log(
+        "Participant muted:",
+        data
+      );
+
+    } catch (error) {
+      console.error(
+        "Mute participant error:",
+        error
+      );
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to mute participant"
+      );
+
+    } finally {
+      setMuting(null);
+    }
+  };
+
+  // =========================================================
+  // MUTE ALL PARTICIPANTS
+  // =========================================================
+
+  const muteAllParticipants = async () => {
+    const token =
+      localStorage.getItem("access_token");
+
+    if (!token) {
+      alert("You are not logged in.");
+      return;
+    }
+
+    const meetingId =
+      window.location.pathname.split("/").pop();
+
+    if (!meetingId) {
+      alert("Meeting ID not found.");
+      return;
+    }
+
+    const remoteParticipants =
+      participants.filter(
+        (participant) =>
+          participant.identity !==
+          localParticipant.identity
+      );
+
+    if (remoteParticipants.length === 0) {
+      alert("There are no other participants.");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Mute all participants?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setMutingAll(true);
+
+      let successCount = 0;
+      let failedCount = 0;
+
+      for (const participant of remoteParticipants) {
+        const microphonePublication =
+          participant.getTrackPublication(
+            "microphone"
+          );
+
+        if (!microphonePublication) {
+          continue;
+        }
+
+        const trackSid =
+          microphonePublication.trackSid;
+
+        if (!trackSid) {
+          continue;
+        }
+
+        const response = await fetch(
+          `http://127.0.0.1:8000/api/meetings/${meetingId}/mute-participant`,
+          {
+            method: "POST",
+
+            headers: {
+              Authorization:
+                `Bearer ${token}`,
+
+              "Content-Type":
+                "application/x-www-form-urlencoded",
+            },
+
+            body: new URLSearchParams({
+              participant_identity:
+                participant.identity,
+
+              track_sid:
+                trackSid,
+            }),
+          }
+        );
+
+        if (response.ok) {
+          successCount++;
+        } else {
+          failedCount++;
+
+          const data =
+            await response.json();
+
+          console.error(
+            `Failed to mute ${participant.identity}:`,
+            data
+          );
+        }
+      }
+
+      console.log(
+        `Mute All completed. Success: ${successCount}, Failed: ${failedCount}`
+      );
+
+    } catch (error) {
+      console.error(
+        "Mute all error:",
+        error
+      );
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Failed to mute all participants"
+      );
+
+    } finally {
+      setMutingAll(false);
+    }
+  };
+
+  // =========================================================
   // UI
-  // ------------------------------------------------
+  // =========================================================
 
   return (
     <aside className="participant-panel">
 
-      {/* ============================================
-          HEADER
-      ============================================ */}
+      {/* HEADER */}
 
       <div className="participant-panel-header">
 
@@ -200,6 +459,7 @@ export default function ParticipantPanel({
         </div>
 
         <button
+          type="button"
           className="participant-close-button"
           onClick={onClose}
           aria-label="Close participants"
@@ -210,13 +470,12 @@ export default function ParticipantPanel({
       </div>
 
 
-      {/* ============================================
-          INVITE
-      ============================================ */}
+      {/* INVITE */}
 
       <div className="participant-invite-section">
 
         <button
+          type="button"
           className="participant-invite-button"
           onClick={() => {
             navigator.clipboard.writeText(
@@ -231,9 +490,7 @@ export default function ParticipantPanel({
       </div>
 
 
-      {/* ============================================
-          PARTICIPANT LIST
-      ============================================ */}
+      {/* PARTICIPANT LIST */}
 
       <div className="participant-list">
 
@@ -258,18 +515,14 @@ export default function ParticipantPanel({
               className="participant-item"
             >
 
-              {/* --------------------------------------
-                  AVATAR
-              -------------------------------------- */}
+              {/* AVATAR */}
 
               <div className="participant-avatar">
                 {getInitials(name)}
               </div>
 
 
-              {/* --------------------------------------
-                  NAME
-              -------------------------------------- */}
+              {/* NAME */}
 
               <div className="participant-info">
 
@@ -296,9 +549,7 @@ export default function ParticipantPanel({
               </div>
 
 
-              {/* --------------------------------------
-                  MEDIA STATUS
-              -------------------------------------- */}
+              {/* MEDIA STATUS */}
 
               <div className="participant-media-status">
 
@@ -321,15 +572,11 @@ export default function ParticipantPanel({
                 )}
 
 
-                {/* --------------------------------------
-                    HOST PARTICIPANT MENU
-                -------------------------------------- */}
+                {/* HOST MENU */}
 
                 {isHost && !isLocal && (
 
                   <div className="participant-menu-wrapper">
-
-                    {/* Three dots button */}
 
                     <button
                       type="button"
@@ -351,14 +598,36 @@ export default function ParticipantPanel({
                     </button>
 
 
-                    {/* --------------------------------
-                        ACTION MENU
-                    -------------------------------- */}
+                    {/* ACTION MENU */}
 
                     {openMenu ===
                       participant.identity && (
 
                       <div className="participant-action-menu">
+
+                        {/* MUTE */}
+
+                        <button
+                          type="button"
+                          disabled={
+                            muting ===
+                            participant.identity
+                          }
+                          onClick={() =>
+                            muteParticipant(
+                              participant,
+                              name
+                            )
+                          }
+                        >
+                          {muting ===
+                          participant.identity
+                            ? "Muting..."
+                            : "Mute Participant"}
+                        </button>
+
+
+                        {/* REMOVE */}
 
                         <button
                           type="button"
@@ -397,24 +666,23 @@ export default function ParticipantPanel({
       </div>
 
 
-      {/* ============================================
-          HOST CONTROLS
-      ============================================ */}
+      {/* HOST CONTROLS */}
 
       {isHost && (
 
         <div className="participant-host-controls">
 
           <button
+            type="button"
             className="mute-all-button"
-            onClick={() => {
-              alert(
-                "Mute All will be connected to LiveKit participant controls next."
-              );
-            }}
+            onClick={muteAllParticipants}
+            disabled={mutingAll}
           >
             <MicOff size={17} />
-            Mute All
+
+            {mutingAll
+              ? "Muting..."
+              : "Mute All"}
           </button>
 
         </div>

@@ -14,8 +14,11 @@ from app.schemas.meeting import (
     MeetingResponse,
 )
 from app.utils.security import get_current_user
-from app.services.livekit_service import delete_livekit_room
-from app.services.livekit_service import remove_livekit_participant
+from app.services.livekit_service import (
+    delete_livekit_room,
+    remove_livekit_participant,
+    mute_livekit_participant,
+)
 
 router = APIRouter(
     prefix="/api/meetings",
@@ -310,6 +313,61 @@ async def remove_participant(
 
     except Exception as e:
         print("Failed to remove participant:", e)
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
+        
+@router.post("/{meeting_id}/mute-participant")
+async def mute_participant(
+    meeting_id: str,
+    participant_identity: str = Form(...),
+    track_sid: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found",
+        )
+
+    # Only host can mute participants
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can mute participants",
+        )
+
+    # Host cannot mute themselves using this endpoint
+    if participant_identity == current_user.name:
+        raise HTTPException(
+            status_code=400,
+            detail="Host cannot mute themselves",
+        )
+
+    try:
+        await mute_livekit_participant(
+            room_name=meeting.meeting_id,
+            participant_identity=participant_identity,
+            track_sid=track_sid,
+            muted=True,
+        )
+
+        return {
+            "message": "Participant muted successfully",
+            "participant_identity": participant_identity,
+        }
+
+    except Exception as e:
+        print("Failed to mute participant:", e)
 
         raise HTTPException(
             status_code=500,

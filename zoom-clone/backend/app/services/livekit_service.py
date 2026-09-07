@@ -132,3 +132,50 @@ async def remove_livekit_participant(
 
     finally:
         await livekit_api.aclose()
+        
+async def mute_livekit_participant(
+    room_name: str,
+    participant_identity: str,
+    track_sid: str,
+    muted: bool = True,
+):
+    """
+    Mute or unmute a participant's published track.
+    """
+
+    if not LIVEKIT_URL:
+        raise RuntimeError("LIVEKIT_URL is not set")
+
+    if not LIVEKIT_API_KEY:
+        raise RuntimeError("LIVEKIT_API_KEY is not set")
+
+    if not LIVEKIT_API_SECRET:
+        raise RuntimeError("LIVEKIT_API_SECRET is not set")
+
+    livekit_api = api.LiveKitAPI(
+        url=LIVEKIT_URL,
+        api_key=LIVEKIT_API_KEY,
+        api_secret=LIVEKIT_API_SECRET,
+    )
+
+    try:
+        result = await livekit_api.room.mute_published_track(
+            api.MuteRoomTrackRequest(
+                room=room_name,
+                identity=participant_identity,
+                track_sid=track_sid,
+                muted=muted,
+            )
+        )
+
+        print("========== PARTICIPANT TRACK MUTED ==========")
+        print("Room:", room_name)
+        print("Participant:", participant_identity)
+        print("Track:", track_sid)
+        print("Muted:", muted)
+        print("==============================================")
+
+        return result
+
+    finally:
+        await livekit_api.aclose()
