@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
+import os
 
 from app.services.livekit_service import create_livekit_token
-
 
 router = APIRouter(
     prefix="/api/livekit",
@@ -24,5 +24,6 @@ def generate_token(data: TokenRequest):
     )
 
     return {
-        "token": token
+        "server_url": os.getenv("LIVEKIT_URL"),
+        "participant_token": token,
     }

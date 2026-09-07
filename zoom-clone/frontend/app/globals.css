@@ -723,3 +723,53 @@ body {
   }
 
 }
+
+.meeting-container {
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+  overflow: hidden;
+}
+
+.livekit-room {
+  width: 100%;
+  height: 100%;
+}
+
+.meeting-loading,
+.meeting-error {
+  width: 100vw;
+  height: 100vh;
+  background: #111;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.meeting-loading p {
+  color: #999;
+  margin-top: 8px;
+}
+
+.meeting-loader {
+  width: 40px;
+  height: 40px;
+
+  border: 4px solid #444;
+  border-top-color: #2d8cff;
+
+  border-radius: 50%;
+
+  animation: meeting-spin 1s linear infinite;
+
+  margin-bottom: 20px;
+}
+
+@keyframes meeting-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
