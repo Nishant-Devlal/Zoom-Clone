@@ -11,32 +11,53 @@ import {
 } from "lucide-react";
 
 export default function Navbar() {
+  const router = useRouter();
+
+  const [user, setUser] = useState<{
+    id: number;
+    name: string;
+    email: string;
+  } | null>(null);
+
+  const [showProfile, setShowProfile] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch {
+        localStorage.removeItem("user");
+      }
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+
+    router.push("/login");
+  };
+
   return (
     <header className="navbar">
       <div className="navbar-left">
-
         <div className="zoom-logo">
           <span className="zoom-logo-icon">Z</span>
           <span className="zoom-logo-text">Zoom</span>
         </div>
-
       </div>
 
       <div className="navbar-center">
-
         <div className="search-box">
           <Search size={18} />
 
-          <input
-            type="text"
-            placeholder="Search"
-          />
+          <input type="text" placeholder="Search" />
         </div>
-
       </div>
 
       <div className="navbar-right">
-
         <button className="icon-button">
           <HelpCircle size={20} />
         </button>
@@ -46,119 +67,68 @@ export default function Navbar() {
           <span className="notification-dot" />
         </button>
 
-        <button className="profile-button">
+        <div className="navbar-profile-wrapper">
+          <button
+            className="navbar-profile-button"
+            onClick={() => setShowProfile(!showProfile)}
+          >
+            <div className="navbar-avatar">
+              {user?.name?.charAt(0).toUpperCase() || "U"}
+            </div>
 
-          <div className="profile-avatar">
-            N
-          </div>
+            <div className="navbar-user-info">
+              <strong>{user?.name || "User"}</strong>
+              <span>{user?.email || ""}</span>
+            </div>
 
-          <div className="profile-info">
-            <span className="profile-name">
-              Nishant
-            </span>
+            <ChevronDown size={16} />
+          </button>
 
-            <span className="profile-email">
-              nishant@example.com
-            </span>
-          </div>
+          {showProfile && (
+            <div className="navbar-profile-menu">
+              <div className="profile-menu-header">
+                <div className="navbar-avatar large">
+                  {user?.name?.charAt(0).toUpperCase() || "U"}
+                </div>
 
-          <ChevronDown size={16} />
+                <div>
+                  <strong>{user?.name || "User"}</strong>
+                  <span>{user?.email || ""}</span>
+                </div>
+              </div>
 
-        </button>
+              <div className="profile-menu-divider" />
 
+              <button
+                onClick={() => {
+                  setShowProfile(false);
+                  router.push("/profile");
+                }}
+              >
+                <User size={17} />
+                Profile
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowProfile(false);
+                  router.push("/settings");
+                }}
+              >
+                <Settings size={17} />
+                Settings
+              </button>
+
+              <div className="profile-menu-divider" />
+
+              <button className="logout-button" onClick={handleLogout}>
+                <LogOut size={17} />
+                Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );
 }
-
-const router = useRouter();
-
-const [user, setUser] = useState<{
-  id: number;
-  name: string;
-  email: string;
-} | null>(null);
-
-const [showProfile, setShowProfile] = useState(false);
-
-useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-
-  if (storedUser) {
-    try {
-      setUser(JSON.parse(storedUser));
-    } catch {
-      localStorage.removeItem("user");
-    }
-  }
-}, []);
-
-const handleLogout = () => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("user");
-
-  router.push("/login");
-};
-
-<div className="navbar-profile-wrapper">
-  <button
-    className="navbar-profile-button"
-    onClick={() => setShowProfile(!showProfile)}
-  >
-    <div className="navbar-avatar">
-      {user?.name?.charAt(0).toUpperCase() || "U"}
-    </div>
-
-    <div className="navbar-user-info">
-      <strong>{user?.name || "User"}</strong>
-      <span>{user?.email || ""}</span>
-    </div>
-  </button>
-
-  {showProfile && (
-    <div className="navbar-profile-menu">
-      <div className="profile-menu-header">
-        <div className="navbar-avatar large">
-          {user?.name?.charAt(0).toUpperCase() || "U"}
-        </div>
-
-        <div>
-          <strong>{user?.name || "User"}</strong>
-          <span>{user?.email || ""}</span>
-        </div>
-      </div>
-
-      <div className="profile-menu-divider" />
-
-      <button
-        onClick={() => {
-          setShowProfile(false);
-          router.push("/profile");
-        }}
-      >
-        <User size={17} />
-        Profile
-      </button>
-
-      <button
-        onClick={() => {
-          setShowProfile(false);
-          router.push("/settings");
-        }}
-      >
-        <Settings size={17} />
-        Settings
-      </button>
-
-      <div className="profile-menu-divider" />
-
-      <button
-        className="logout-button"
-        onClick={handleLogout}
-      >
-        <LogOut size={17} />
-        Sign out
-      </button>
-    </div>
-  )}
-</div>

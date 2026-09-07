@@ -1,15 +1,19 @@
 import random
-from app.models.user import User
-from app.utils.security import get_current_user
+
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.models.meeting import Meeting
+from app.models.user import User
 from app.schemas.meeting import (
     CreateMeetingRequest,
     ScheduleMeetingRequest,
     MeetingResponse,
 )
+from app.utils.security import get_current_user
 
 
 router = APIRouter(
@@ -17,6 +21,10 @@ router = APIRouter(
     tags=["Meetings"]
 )
 
+
+# ---------------------------------------
+# MEETING ID GENERATION
+# ---------------------------------------
 
 def generate_meeting_id():
     return str(random.randint(100000000, 999999999))
@@ -89,6 +97,140 @@ def schedule_meeting(
 
 
 # ---------------------------------------
+# GET UPCOMING MEETINGS
+# ---------------------------------------
+
+@router.get(
+    "/upcoming/list",
+    response_model=list[MeetingResponse]
+)
+def get_upcoming_meetings(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    now = datetime.now(timezone.utc)
+
+    meetings = (
+        db.query(Meeting)
+        .filter(Meeting.host_id == current_user.id)
+        .filter(Meeting.scheduled_at != None)
+        .filter(Meeting.scheduled_at >= now)
+        .filter(Meeting.ended_at == None)
+        .order_by(Meeting.scheduled_at.asc())
+        .all()
+    )
+
+    return meetings
+
+
+# ---------------------------------------
+# GET PREVIOUS MEETINGS
+# ---------------------------------------
+
+@router.get(
+    "/previous/list",
+    response_model=list[MeetingResponse]
+)
+def get_previous_meetings(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meetings = (
+        db.query(Meeting)
+        .filter(Meeting.host_id == current_user.id)
+        .filter(Meeting.ended_at != None)
+        .order_by(Meeting.ended_at.desc())
+        .all()
+    )
+
+    return meetings
+
+
+# ---------------------------------------
+# START MEETING
+# ---------------------------------------
+
+@router.post(
+    "/{meeting_id}/start",
+    response_model=MeetingResponse
+)
+def start_meeting(
+    meeting_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found"
+        )
+
+    # Only the host can start the meeting
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can start this meeting"
+        )
+
+    # Don't overwrite the original start time
+    if meeting.started_at is None:
+        meeting.started_at = datetime.now(timezone.utc)
+
+        db.commit()
+        db.refresh(meeting)
+
+    return meeting
+
+
+# ---------------------------------------
+# END MEETING
+# ---------------------------------------
+
+@router.post(
+    "/{meeting_id}/end",
+    response_model=MeetingResponse
+)
+def end_meeting(
+    meeting_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found"
+        )
+
+    # Only the host can end the meeting
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can end this meeting"
+        )
+
+    # Don't overwrite the original end time
+    if meeting.ended_at is None:
+        meeting.ended_at = datetime.now(timezone.utc)
+
+        db.commit()
+        db.refresh(meeting)
+
+    return meeting
+
+
+# ---------------------------------------
 # GET ONE MEETING
 # ---------------------------------------
 
@@ -98,7 +240,7 @@ def schedule_meeting(
 )
 def get_meeting(
     meeting_id: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     meeting = (
         db.query(Meeting)
@@ -113,31 +255,3 @@ def get_meeting(
         )
 
     return meeting
-
-
-# ---------------------------------------
-# GET UPCOMING MEETINGS
-# ---------------------------------------
-
-@router.get(
-    "/upcoming/list",
-    response_model=list[MeetingResponse]
-)
-def get_upcoming_meetings(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    from datetime import datetime, timezone
-
-    now = datetime.now(timezone.utc)
-
-    meetings = (
-        db.query(Meeting)
-        .filter(Meeting.host_id == current_user.id)
-        .filter(Meeting.scheduled_at != None)
-        .filter(Meeting.scheduled_at >= now)
-        .order_by(Meeting.scheduled_at.asc())
-        .all()
-    )
-
-    return meetings

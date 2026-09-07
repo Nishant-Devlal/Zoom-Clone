@@ -17,6 +17,9 @@ class MeetingResponse(BaseModel):
     host_id: int
     title: str
     scheduled_at: datetime | None = None
+    created_at: datetime | None = None
+    started_at: datetime | None = None
+    ended_at: datetime | None = None
 
     class Config:
         from_attributes = True
