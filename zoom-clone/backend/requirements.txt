@@ -4,7 +4,7 @@ sqlalchemy
 psycopg2-binary
 python-dotenv
 PyJWT
-pwdlib
+pwdlib[argon2]
 livekit-api
 python-multipart
 email-validator
