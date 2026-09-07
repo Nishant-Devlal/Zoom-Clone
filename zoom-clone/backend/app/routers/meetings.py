@@ -14,6 +14,7 @@ from app.schemas.meeting import (
     MeetingResponse,
 )
 from app.utils.security import get_current_user
+from app.services.livekit_service import delete_livekit_room
 
 
 router = APIRouter(
@@ -192,11 +193,8 @@ def start_meeting(
 # END MEETING
 # ---------------------------------------
 
-@router.post(
-    "/{meeting_id}/end",
-    response_model=MeetingResponse
-)
-def end_meeting(
+@router.post("/{meeting_id}/end", response_model=MeetingResponse)
+async def end_meeting(
     meeting_id: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -210,25 +208,33 @@ def end_meeting(
     if not meeting:
         raise HTTPException(
             status_code=404,
-            detail="Meeting not found"
+            detail="Meeting not found",
         )
 
-    # Only the host can end the meeting
+    # Only host can end the meeting
     if meeting.host_id != current_user.id:
         raise HTTPException(
             status_code=403,
-            detail="Only the host can end this meeting"
+            detail="Only the host can end this meeting",
         )
 
-    # Don't overwrite the original end time
-    if meeting.ended_at is None:
-        meeting.ended_at = datetime.now(timezone.utc)
+    # Already ended
+    if meeting.ended_at is not None:
+        return meeting
 
-        db.commit()
-        db.refresh(meeting)
+    # Mark meeting as ended in PostgreSQL
+    meeting.ended_at = datetime.now(timezone.utc)
+
+    db.commit()
+    db.refresh(meeting)
+
+    # Delete LiveKit room and disconnect everyone
+    try:
+        await delete_livekit_room(meeting.meeting_id)
+    except Exception as e:
+        print("LiveKit room deletion failed:", e)
 
     return meeting
-
 
 # ---------------------------------------
 # GET ONE MEETING

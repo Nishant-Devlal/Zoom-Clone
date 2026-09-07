@@ -3821,3 +3821,46 @@ body {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.2);
 }
+
+.meeting-exit-controls {
+  position: absolute;
+  right: 22px;
+  bottom: 18px;
+  z-index: 60;
+}
+
+.participant-leave-meeting,
+.host-end-meeting {
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.participant-leave-meeting {
+  background: #3a3a3a;
+}
+
+.participant-leave-meeting:hover {
+  background: #4a4a4a;
+}
+
+.host-end-meeting {
+  background: #dc3545;
+}
+
+.host-end-meeting:hover {
+  background: #c82333;
+}
+
+.host-end-meeting:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

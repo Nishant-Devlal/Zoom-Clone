@@ -56,3 +56,39 @@ def create_livekit_token(room_name: str, participant_name: str):
     print("====================================")
 
     return jwt_token
+
+
+async def delete_livekit_room(room_name: str):
+    """
+    Delete a LiveKit room and disconnect all participants.
+    """
+
+    if not LIVEKIT_URL:
+        raise RuntimeError("LIVEKIT_URL is not set")
+
+    if not LIVEKIT_API_KEY:
+        raise RuntimeError("LIVEKIT_API_KEY is not set")
+
+    if not LIVEKIT_API_SECRET:
+        raise RuntimeError("LIVEKIT_API_SECRET is not set")
+
+    livekit_api = api.LiveKitAPI(
+        url=LIVEKIT_URL,
+        api_key=LIVEKIT_API_KEY,
+        api_secret=LIVEKIT_API_SECRET,
+    )
+
+    try:
+        await livekit_api.room.delete_room(
+            api.DeleteRoomRequest(
+                room=room_name
+            )
+        )
+
+        print("========== LIVEKIT ROOM DELETED ==========")
+        print("Room:", room_name)
+        print("All participants disconnected")
+        print("===========================================")
+
+    finally:
+        await livekit_api.aclose()

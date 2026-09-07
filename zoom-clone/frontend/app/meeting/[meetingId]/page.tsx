@@ -21,6 +21,47 @@ import {
 
 import "@livekit/components-styles";
 
+function MeetingControls({
+  isHost,
+  onEndMeeting,
+}: {
+  isHost: boolean;
+  onEndMeeting: (room: any) => void;
+}) {
+  const room = useRoomContext();
+
+  const leaveMeeting = async () => {
+    await room.disconnect();
+    window.location.href = "/";
+  };
+
+  const handleEndMeeting = () => {
+    onEndMeeting(room);
+  };
+
+  return (
+    <div className="meeting-exit-controls">
+      {isHost ? (
+        <button
+          className="host-end-meeting"
+          onClick={handleEndMeeting}
+        >
+          <PhoneOff size={18} />
+          End Meeting
+        </button>
+      ) : (
+        <button
+          className="participant-leave-meeting"
+          onClick={leaveMeeting}
+        >
+          <PhoneOff size={18} />
+          Leave Meeting
+        </button>
+      )}
+    </div>
+  );
+}
+
 export default function MeetingPage() {
   const params = useParams();
   const router = useRouter();
@@ -216,12 +257,10 @@ export default function MeetingPage() {
 
     const invitation =
       `You are invited to a meeting.
-
-Meeting: ${meetingTitle}
-Meeting ID: ${meetingId}
-
-Join meeting:
-${meetingLink}`;
+      Meeting: ${meetingTitle}
+      Meeting ID: ${meetingId}
+      Join meeting:
+      ${meetingLink}`;
 
     try {
       await navigator.clipboard.writeText(
@@ -247,15 +286,14 @@ ${meetingLink}`;
   // END MEETING
   // ---------------------------------------
 
-  const endMeeting = async () => {
+  const endMeeting = async (room: any) => {
     if (!isHost || endingMeeting) {
       return;
     }
 
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to end this meeting for everyone?"
-      );
+    const confirmed = window.confirm(
+      "Are you sure you want to end this meeting for everyone?"
+    );
 
     if (!confirmed) {
       return;
@@ -265,49 +303,41 @@ ${meetingLink}`;
       setEndingMeeting(true);
 
       const authToken =
-        localStorage.getItem(
-          "access_token"
-        );
+        localStorage.getItem("access_token");
 
       if (!authToken) {
         router.replace("/login");
         return;
       }
 
-      const response =
-        await fetch(
-          `http://127.0.0.1:8000/api/meetings/${meetingId}/end`,
-          {
-            method: "POST",
-            headers: {
-              Authorization:
-                `Bearer ${authToken}`,
-            },
-          }
-        );
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/meetings/${meetingId}/end`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.detail ||
-            "Unable to end meeting"
+          data.detail || "Unable to end meeting"
         );
       }
 
-      console.log(
-        "Meeting ended:",
-        data
-      );
+      console.log("Meeting ended:", data);
 
+      // Disconnect host from LiveKit
+      await room.disconnect();
+
+      // Return to dashboard
       router.push("/");
 
     } catch (error) {
-      console.error(
-        "End meeting error:",
-        error
-      );
+      console.error("End meeting error:", error);
 
       alert(
         error instanceof Error
@@ -318,6 +348,11 @@ ${meetingLink}`;
       setEndingMeeting(false);
     }
   };
+
+  <MeetingControls 
+  isHost={isHost}
+  onEndMeeting={endMeeting}
+  />
 
 
   // ---------------------------------------
@@ -503,28 +538,17 @@ ${meetingLink}`;
               onClose={() => setShowParticipants(false)}
             />
           )}
+
+          <MeetingControls
+            isHost={isHost}
+            onEndMeeting={endMeeting}
+          />
         </LiveKitRoom>
 
       </div>
 
 
-      {/* =====================================
-          HOST END MEETING BUTTON
-      ===================================== */}
-
-      {isHost && (
-        <button
-          className="host-end-meeting"
-          onClick={endMeeting}
-          disabled={endingMeeting}
-        >
-          <PhoneOff size={18} />
-
-          {endingMeeting
-            ? "Ending..."
-            : "End Meeting"}
-        </button>
-      )}
+      
 
     </div>
   );
