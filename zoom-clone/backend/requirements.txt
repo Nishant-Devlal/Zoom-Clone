@@ -7,3 +7,4 @@ PyJWT
 pwdlib
 livekit-api
 python-multipart
+email-validator
