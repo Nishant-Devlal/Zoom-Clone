@@ -1,5 +1,7 @@
 import os
-import uuid
+
+import cloudinary
+import cloudinary.uploader
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel
@@ -8,6 +10,17 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.user import User
 from app.utils.security import get_current_user
+
+
+# ---------------------------------------------------------
+# Cloudinary configuration
+# ---------------------------------------------------------
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 
 router = APIRouter(
@@ -91,7 +104,32 @@ async def upload_profile_picture(
     current_user: User = Depends(get_current_user),
 ):
 
+    # -----------------------------------------------------
+    # Check Cloudinary configuration
+    # -----------------------------------------------------
+
+    if not os.getenv("CLOUDINARY_CLOUD_NAME"):
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary cloud name is not configured"
+        )
+
+    if not os.getenv("CLOUDINARY_API_KEY"):
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary API key is not configured"
+        )
+
+    if not os.getenv("CLOUDINARY_API_SECRET"):
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary API secret is not configured"
+        )
+
+    # -----------------------------------------------------
     # Allowed MIME types
+    # -----------------------------------------------------
+
     allowed_types = {
         "image/jpeg",
         "image/png",
@@ -105,7 +143,10 @@ async def upload_profile_picture(
             detail="Only JPG, PNG, GIF and WEBP images are allowed"
         )
 
+    # -----------------------------------------------------
     # Read uploaded file
+    # -----------------------------------------------------
+
     content = await file.read()
 
     # 2 MB maximum size
@@ -117,48 +158,43 @@ async def upload_profile_picture(
             detail="Profile picture must be smaller than 2 MB"
         )
 
-    # Create upload directory
-    upload_dir = "uploads/profile_pictures"
-    os.makedirs(upload_dir, exist_ok=True)
+    # -----------------------------------------------------
+    # Upload to Cloudinary
+    # -----------------------------------------------------
 
-    # Determine extension from MIME type instead of trusting
-    # the original filename
-    extension_map = {
-        "image/jpeg": ".jpg",
-        "image/png": ".png",
-        "image/gif": ".gif",
-        "image/webp": ".webp",
-    }
+    try:
+        result = cloudinary.uploader.upload(
+            content,
+            folder="zoom-clone/profile_pictures",
+            public_id=f"user_{current_user.id}",
+            overwrite=True,
+            invalidate=True,
+            resource_type="image",
+        )
 
-    extension = extension_map[file.content_type]
+    except Exception as e:
+        print("Cloudinary upload error:", e)
 
-    # Generate unique filename
-    filename = f"{uuid.uuid4()}{extension}"
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to upload profile picture"
+        )
 
-    filepath = os.path.join(
-        upload_dir,
-        filename
-    )
+    # -----------------------------------------------------
+    # Get Cloudinary URL
+    # -----------------------------------------------------
 
-    # Save file
-    with open(filepath, "wb") as buffer:
-        buffer.write(content)
+    picture_url = result.get("secure_url")
 
-    # Delete old profile picture if one exists
-    if current_user.profile_picture:
-        old_picture = current_user.profile_picture
+    if not picture_url:
+        raise HTTPException(
+            status_code=500,
+            detail="Cloudinary did not return an image URL"
+        )
 
-        # Convert URL path to local filesystem path
-        old_path = old_picture.lstrip("/").replace("/", os.sep)
-
-        if os.path.exists(old_path):
-            try:
-                os.remove(old_path)
-            except OSError:
-                pass
-
-    # URL stored in database
-    picture_url = f"/uploads/profile_pictures/{filename}"
+    # -----------------------------------------------------
+    # Save Cloudinary URL in database
+    # -----------------------------------------------------
 
     current_user.profile_picture = picture_url
 
