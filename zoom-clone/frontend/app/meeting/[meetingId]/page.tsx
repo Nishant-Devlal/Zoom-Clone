@@ -200,7 +200,7 @@ export default function MeetingPage() {
         // ---------------------------------------
 
         const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token`,
         {
           method: "POST",
           headers: {

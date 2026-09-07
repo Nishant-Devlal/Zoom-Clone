@@ -55,7 +55,7 @@ export default function SignupPage() {
       setLoading(true);
 
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
         {
           method: "POST",
           headers: {

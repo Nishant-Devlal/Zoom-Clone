@@ -35,7 +35,7 @@ export default function MeetingActions() {
       }
 
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/meetings",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings`,
         {
           method: "POST",
           headers: {
@@ -135,7 +135,7 @@ export default function MeetingActions() {
       }
 
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/meetings/schedule",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/schedule`,
         {
           method: "POST",
           headers: {

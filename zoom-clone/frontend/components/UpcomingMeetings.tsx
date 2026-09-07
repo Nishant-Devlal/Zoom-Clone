@@ -26,7 +26,7 @@ export default function UpcomingMeetings() {
       }
 
       const response = await fetch(
-        "${process.env.NEXT_PUBLIC_API_URL}/api/meetings/upcoming/list",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/upcoming/list`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
