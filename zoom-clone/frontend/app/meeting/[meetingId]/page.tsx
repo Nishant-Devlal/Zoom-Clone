@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import ParticipantPanel from "@/components/ParticipantPanel";
 
 import {
   LiveKitRoom,
   VideoConference,
+  useRoomContext,
 } from "@livekit/components-react";
 
 import {
@@ -36,6 +38,7 @@ export default function MeetingPage() {
     useState("Meeting");
 
   const [copied, setCopied] = useState(false);
+  const [showParticipants, setShowParticipants] = useState(false);
 
   // ---------------------------------------
   // INITIALIZE MEETING
@@ -437,6 +440,14 @@ ${meetingLink}`;
           </div>
 
           <button
+            className="meeting-participants-button"
+            onClick={() => setShowParticipants(!showParticipants)}
+          >
+            <Users size={16} />
+            Participants
+          </button>
+
+          <button
             className="invite-button"
             onClick={copyInvitation}
           >
@@ -473,28 +484,25 @@ ${meetingLink}`;
           className="custom-livekit-room"
 
           onConnected={() => {
-            console.log(
-              "CONNECTED TO LIVEKIT"
-            );
+            console.log("CONNECTED TO LIVEKIT");
           }}
 
           onDisconnected={(reason) => {
-            console.log(
-              "Disconnected:",
-              reason
-            );
+            console.log("Disconnected:", reason);
           }}
 
           onError={(error) => {
-            console.error(
-              "LIVEKIT ERROR:",
-              error
-            );
+            console.error("LIVEKIT ERROR:", error);
           }}
         >
-
           <VideoConference />
 
+          {showParticipants && (
+            <ParticipantPanel
+              isHost={isHost}
+              onClose={() => setShowParticipants(false)}
+            />
+          )}
         </LiveKitRoom>
 
       </div>
