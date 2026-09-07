@@ -15,6 +15,29 @@
   --zoom-green: #22c55e;
 }
 
+/* =========================================================
+   DARK THEME
+   ========================================================= */
+
+[data-theme="dark"] {
+  --zoom-bg: #111111;
+  --zoom-card: #1b1b1b;
+  --zoom-text: #f5f5f5;
+  --zoom-muted: #a7a7a7;
+  --zoom-border: #333333;
+  --zoom-hover: #272727;
+  --zoom-primary: #2d8cff;
+}
+
+html,
+body {
+  background: var(--zoom-bg);
+  color: var(--zoom-text);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
 html,
 body {
   margin: 0;

@@ -69,26 +69,46 @@ export default function SettingsPage() {
   // Apply theme
   // ---------------------------------------------------------
 
-  useEffect(() => {
+    useEffect(() => {
+    const mediaQuery = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+    );
+
     const applyTheme = () => {
-      let theme = settings.theme;
+        let theme = settings.theme;
 
-      if (theme === "system") {
-        theme = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches
-          ? "dark"
-          : "light";
-      }
+        if (theme === "system") {
+        theme = mediaQuery.matches
+            ? "dark"
+            : "light";
+        }
 
-      document.documentElement.setAttribute(
+        document.documentElement.setAttribute(
         "data-theme",
         theme
-      );
+        );
     };
 
     applyTheme();
-  }, [settings.theme]);
+
+    const handleSystemThemeChange = () => {
+        if (settings.theme === "system") {
+        applyTheme();
+        }
+    };
+
+    mediaQuery.addEventListener(
+        "change",
+        handleSystemThemeChange
+    );
+
+    return () => {
+        mediaQuery.removeEventListener(
+        "change",
+        handleSystemThemeChange
+        );
+    };
+    }, [settings.theme]);
 
   // ---------------------------------------------------------
   // Update setting
