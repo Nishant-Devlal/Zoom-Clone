@@ -35,7 +35,7 @@ export default function MeetingActions() {
       }
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/meetings",
+        "${process.env.NEXT_PUBLIC_API_URL}/api/meetings",
         {
           method: "POST",
           headers: {
@@ -92,7 +92,7 @@ export default function MeetingActions() {
        * We will add this endpoint to the backend next.
        */
       const response = await fetch(
-        `http://127.0.0.1:8000/api/meetings/${cleanedId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${cleanedId}`
       );
 
       if (response.status === 404) {
@@ -135,7 +135,7 @@ export default function MeetingActions() {
       }
 
       const response = await fetch(
-        "http://127.0.0.1:8000/api/meetings/schedule",
+        "${process.env.NEXT_PUBLIC_API_URL}/api/meetings/schedule",
         {
           method: "POST",
           headers: {

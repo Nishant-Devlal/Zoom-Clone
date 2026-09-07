@@ -129,7 +129,7 @@ export default function MeetingPage() {
         // ---------------------------------------
 
         const meetingResponse = await fetch(
-          `http://127.0.0.1:8000/api/meetings/${meetingId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}`,
           {
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -170,7 +170,7 @@ export default function MeetingPage() {
         if (host) {
           const startResponse =
             await fetch(
-              `http://127.0.0.1:8000/api/meetings/${meetingId}/start`,
+              `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/start`,
               {
                 method: "POST",
                 headers: {
@@ -200,7 +200,7 @@ export default function MeetingPage() {
         // ---------------------------------------
 
         const response = await fetch(
-        "http://127.0.0.1:8000/api/livekit/token",
+        "${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token",
         {
           method: "POST",
           headers: {
@@ -318,7 +318,7 @@ const toggleMeetingLock = async () => {
     setLockingMeeting(true);
 
     const response = await fetch(
-      `http://127.0.0.1:8000/api/meetings/${meetingId}/lock`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/lock`,
       {
         method: "POST",
         headers: {
@@ -390,7 +390,7 @@ const toggleMeetingLock = async () => {
       }
 
       const response = await fetch(
-        `http://127.0.0.1:8000/api/meetings/${meetingId}/end`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/end`,
         {
           method: "POST",
           headers: {
