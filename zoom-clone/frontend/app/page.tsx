@@ -75,20 +75,7 @@ export default function Home() {
           {/* CALENDAR */}
           <section className="zoom-calendar-card">
 
-            {/* Calendar connection banner */}
-            <div className="calendar-connect-banner">
-              <div className="calendar-info-icon">
-                i
-              </div>
-
-              <p>
-                You haven't connected your calendar yet.{" "}
-                <button type="button">
-                  Connect now
-                </button>{" "}
-                to manage all your meetings and events in one place.
-              </p>
-            </div>
+            
 
             {/* Date heading */}
             <div className="calendar-heading">
