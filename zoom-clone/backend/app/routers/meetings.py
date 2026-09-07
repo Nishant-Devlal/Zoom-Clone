@@ -2,7 +2,7 @@ import random
 
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -15,7 +15,7 @@ from app.schemas.meeting import (
 )
 from app.utils.security import get_current_user
 from app.services.livekit_service import delete_livekit_room
-
+from app.services.livekit_service import remove_livekit_participant
 
 router = APIRouter(
     prefix="/api/meetings",
@@ -261,3 +261,57 @@ def get_meeting(
         )
 
     return meeting
+
+
+@router.get("/{meeting_id}")
+@router.post("/{meeting_id}/remove-participant")
+async def remove_participant(
+    meeting_id: str,
+    participant_identity: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found",
+        )
+
+    # Only the host can remove participants
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can remove participants",
+        )
+
+    # Don't allow host to remove themselves
+    if participant_identity == current_user.name:
+        raise HTTPException(
+            status_code=400,
+            detail="Host cannot remove themselves",
+        )
+
+    try:
+        await remove_livekit_participant(
+            room_name=meeting.meeting_id,
+            participant_identity=participant_identity,
+        )
+
+        return {
+            "message": "Participant removed successfully",
+            "participant_identity": participant_identity,
+        }
+
+    except Exception as e:
+        print("Failed to remove participant:", e)
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )

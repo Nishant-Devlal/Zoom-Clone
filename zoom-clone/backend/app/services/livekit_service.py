@@ -92,3 +92,43 @@ async def delete_livekit_room(room_name: str):
 
     finally:
         await livekit_api.aclose()
+        
+
+async def remove_livekit_participant(
+    room_name: str,
+    participant_identity: str,
+):
+    """
+    Remove a specific participant from a LiveKit room.
+    """
+
+    if not LIVEKIT_URL:
+        raise RuntimeError("LIVEKIT_URL is not set")
+
+    if not LIVEKIT_API_KEY:
+        raise RuntimeError("LIVEKIT_API_KEY is not set")
+
+    if not LIVEKIT_API_SECRET:
+        raise RuntimeError("LIVEKIT_API_SECRET is not set")
+
+    livekit_api = api.LiveKitAPI(
+        url=LIVEKIT_URL,
+        api_key=LIVEKIT_API_KEY,
+        api_secret=LIVEKIT_API_SECRET,
+    )
+
+    try:
+        await livekit_api.room.remove_participant(
+            api.RoomParticipantIdentity(
+                room=room_name,
+                identity=participant_identity,
+            )
+        )
+
+        print("========== PARTICIPANT REMOVED ==========")
+        print("Room:", room_name)
+        print("Participant:", participant_identity)
+        print("==========================================")
+
+    finally:
+        await livekit_api.aclose()

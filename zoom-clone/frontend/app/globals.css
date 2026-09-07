@@ -3864,3 +3864,204 @@ body {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* =========================================
+   PARTICIPANT ACTION MENU
+========================================= */
+
+.participant-item {
+  position: relative;
+  z-index: 1;
+
+  min-height: 64px;
+  padding: 8px 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  transition: background 0.15s ease;
+}
+
+.participant-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+
+/* =========================================
+   PARTICIPANT MEDIA STATUS
+========================================= */
+
+.participant-media-status {
+  position: relative;
+  z-index: 20;
+
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #ddd;
+
+  pointer-events: auto;
+}
+
+
+/* =========================================
+   THREE-DOT MENU WRAPPER
+========================================= */
+
+.participant-menu-wrapper {
+  position: relative;
+  z-index: 100;
+}
+
+
+/* =========================================
+   THREE-DOT BUTTON
+========================================= */
+
+.participant-more-button {
+  position: relative;
+
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 7px;
+
+  background: transparent;
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  z-index: 101;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.participant-more-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+
+/* =========================================
+   ACTION MENU
+========================================= */
+
+.participant-action-menu {
+  position: absolute;
+
+  top: 40px;
+  right: 0;
+
+  width: 180px;
+
+  padding: 5px;
+
+  background: #242424;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.35);
+
+  z-index: 1000;
+
+  pointer-events: auto;
+}
+
+
+/* =========================================
+   ACTION MENU BUTTON
+========================================= */
+
+.participant-action-menu button {
+  width: 100%;
+  height: 36px;
+
+  padding: 0 10px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+
+  color: #ffffff;
+
+  display: flex;
+  align-items: center;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  pointer-events: auto;
+
+  transition: background 0.15s ease;
+}
+
+.participant-action-menu button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.participant-action-menu button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* =========================================
+   REMOVE PARTICIPANT
+========================================= */
+
+.participant-remove-action {
+  color: #ff6b6b !important;
+}
+
+.participant-remove-action:hover {
+  background: rgba(255, 107, 107, 0.1) !important;
+}
+
+
+/* =========================================
+   PARTICIPANT PANEL
+========================================= */
+
+.participant-panel {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 340px;
+
+  background: #181818;
+  color: #ffffff;
+
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1000;
+
+  pointer-events: auto;
+
+  box-shadow:
+    -8px 0 25px rgba(0, 0, 0, 0.25);
+}
