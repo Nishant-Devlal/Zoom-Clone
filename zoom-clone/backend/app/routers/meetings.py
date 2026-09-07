@@ -421,3 +421,43 @@ async def stop_participant_video(
             status_code=500,
             detail="Failed to stop participant video",
         )
+        
+        
+@router.get("/{meeting_id}")
+@router.post("/{meeting_id}/lock")
+def lock_meeting(
+    meeting_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found"
+        )
+
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can lock this meeting"
+        )
+
+    meeting.locked = not meeting.locked
+
+    db.commit()
+    db.refresh(meeting)
+
+    return {
+        "message": (
+            "Meeting locked"
+            if meeting.locked
+            else "Meeting unlocked"
+        ),
+        "locked": meeting.locked,
+    }

@@ -17,6 +17,9 @@ import {
   Copy,
   Check,
   PhoneOff,
+  Shield,
+  Lock,
+  Unlock,
 } from "lucide-react";
 
 import "@livekit/components-styles";
@@ -80,6 +83,9 @@ export default function MeetingPage() {
 
   const [copied, setCopied] = useState(false);
   const [showParticipants, setShowParticipants] = useState(false);
+  const [isMeetingLocked, setIsMeetingLocked] = useState(false);
+  const [lockingMeeting, setLockingMeeting] = useState(false);
+
 
   // ---------------------------------------
   // INITIALIZE MEETING
@@ -121,7 +127,12 @@ export default function MeetingPage() {
         // ---------------------------------------
 
         const meetingResponse = await fetch(
-          `http://127.0.0.1:8000/api/meetings/${meetingId}`
+          `http://127.0.0.1:8000/api/meetings/${meetingId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
         );
 
         if (!meetingResponse.ok) {
@@ -133,6 +144,10 @@ export default function MeetingPage() {
 
         setMeetingTitle(
           meeting.title || "Meeting"
+        );
+
+        setIsMeetingLocked(
+          meeting.locked === true
         );
 
         // ---------------------------------------
@@ -181,22 +196,19 @@ export default function MeetingPage() {
         // ---------------------------------------
 
         const response = await fetch(
-          "http://127.0.0.1:8000/api/livekit/token",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-            body: JSON.stringify({
-              room_name: meetingId,
-
-              // Display name
-              participant_name:
-                user.name,
-            }),
-          }
-        );
+        "http://127.0.0.1:8000/api/livekit/token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            room_name: meetingId,
+            participant_name: user.name,
+          }),
+        }
+      );
 
         const data =
           await response.json();
@@ -281,6 +293,69 @@ export default function MeetingPage() {
     }
   };
 
+// ---------------------------------------
+// LOCK / UNLOCK MEETING
+// ---------------------------------------
+
+const toggleMeetingLock = async () => {
+  if (!isHost || lockingMeeting) {
+    return;
+  }
+
+  try {
+    const authToken =
+      localStorage.getItem("access_token");
+
+    if (!authToken) {
+      router.replace("/login");
+      return;
+    }
+
+    setLockingMeeting(true);
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/meetings/${meetingId}/lock`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail ||
+          "Unable to update meeting lock"
+      );
+    }
+
+    setIsMeetingLocked(data.locked === true);
+
+    console.log(
+      data.locked
+        ? "Meeting locked"
+        : "Meeting unlocked"
+    );
+
+  } catch (error) {
+    console.error(
+      "Meeting lock error:",
+      error
+    );
+
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Unable to update meeting lock"
+    );
+
+  } finally {
+    setLockingMeeting(false);
+  }
+};
 
   // ---------------------------------------
   // END MEETING
@@ -450,10 +525,7 @@ export default function MeetingPage() {
             </span>
           </div>
 
-          <div className="meeting-divider" />
-
           <div className="meeting-info">
-
             <strong>
               {meetingTitle}
             </strong>
@@ -462,6 +534,12 @@ export default function MeetingPage() {
               ID: {meetingId}
             </span>
 
+            {isMeetingLocked && (
+              <span className="meeting-locked-indicator">
+                <Lock size={12} />
+                Locked
+              </span>
+            )}
           </div>
 
         </div>
@@ -469,10 +547,36 @@ export default function MeetingPage() {
 
         <div className="meeting-topbar-right">
 
-          <div className="secure-badge">
-            <ShieldCheck size={15} />
-            Secure
-          </div>
+          {isHost ? (
+            <button
+              type="button"
+              className="secure-badge"
+              onClick={toggleMeetingLock}
+              disabled={lockingMeeting}
+              title={
+                isMeetingLocked
+                  ? "Unlock meeting"
+                  : "Lock meeting"
+              }
+            >
+              {isMeetingLocked ? (
+                <Unlock size={15} />
+              ) : (
+                <ShieldCheck size={15} />
+              )}
+
+              {lockingMeeting
+                ? "Updating..."
+                : isMeetingLocked
+                ? "Locked"
+                : "Secure"}
+            </button>
+          ) : (
+            <div className="secure-badge">
+              <ShieldCheck size={15} />
+              Secure
+            </div>
+          )}
 
           <button
             className="meeting-participants-button"

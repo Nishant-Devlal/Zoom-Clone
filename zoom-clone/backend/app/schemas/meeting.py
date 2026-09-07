@@ -20,6 +20,7 @@ class MeetingResponse(BaseModel):
     created_at: datetime | None = None
     started_at: datetime | None = None
     ended_at: datetime | None = None
+    locked: bool = False
 
     class Config:
         from_attributes = True
