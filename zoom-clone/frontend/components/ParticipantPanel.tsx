@@ -5,6 +5,8 @@ import {
   useLocalParticipant,
 } from "@livekit/components-react";
 
+import { Track } from "livekit-client";
+
 import {
   X,
   Mic,
@@ -33,6 +35,8 @@ export default function ParticipantPanel({
   const [removing, setRemoving] = useState<string | null>(null);
   const [muting, setMuting] = useState<string | null>(null);
   const [mutingAll, setMutingAll] = useState(false);
+  const [stoppingVideo, setStoppingVideo] = useState<string | null>(null);
+
 
   // =========================================================
   // PARTICIPANT NAME
@@ -361,10 +365,7 @@ export default function ParticipantPanel({
       let failedCount = 0;
 
       for (const participant of remoteParticipants) {
-        const microphonePublication =
-          participant.getTrackPublication(
-            "microphone"
-          );
+        const microphonePublication = participant.getTrackPublication(Track.Source.Microphone);
 
         if (!microphonePublication) {
           continue;
@@ -435,6 +436,105 @@ export default function ParticipantPanel({
       setMutingAll(false);
     }
   };
+
+  const stopParticipantVideo = async (
+  participant: any,
+  participantName: string
+) => {
+  const confirmed = window.confirm(
+    `Stop ${participantName}'s video?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      alert("You are not logged in.");
+      return;
+    }
+
+    const videoPublication =
+      participant.getTrackPublication(
+        Track.Source.Camera
+      );
+
+    if (!videoPublication) {
+      alert(
+        `${participantName} does not have a camera track.`
+      );
+      return;
+    }
+
+    const trackSid =
+      videoPublication.trackSid;
+
+    if (!trackSid) {
+      alert(
+        `Could not find ${participantName}'s camera track.`
+      );
+      return;
+    }
+
+    const meetingId =
+      window.location.pathname.split("/").pop();
+
+    if (!meetingId) {
+      alert("Meeting ID not found.");
+      return;
+    }
+
+    setStoppingVideo(participant.identity);
+    setOpenMenu(null);
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/api/meetings/${meetingId}/stop-video`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          participant_identity:
+            participant.identity,
+          track_sid: trackSid,
+        }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.detail ||
+          "Failed to stop participant video"
+      );
+    }
+
+    console.log(
+      "Participant video stopped:",
+      data
+    );
+
+  } catch (error) {
+    console.error(
+      "Stop participant video error:",
+      error
+    );
+
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Failed to stop participant video"
+    );
+
+  } finally {
+    setStoppingVideo(null);
+  }
+};
 
   // =========================================================
   // UI
@@ -605,51 +705,59 @@ export default function ParticipantPanel({
 
                       <div className="participant-action-menu">
 
-                        {/* MUTE */}
+                    <button
+                        type="button"
+                        disabled={
+                        muting === participant.identity
+                        }
+                        onClick={() =>
+                        muteParticipant(
+                            participant,
+                            name
+                        )
+                        }
+                    >
+                        {muting === participant.identity
+                        ? "Muting..."
+                        : "Mute Participant"}
+                    </button>
 
-                        <button
-                          type="button"
-                          disabled={
-                            muting ===
-                            participant.identity
-                          }
-                          onClick={() =>
-                            muteParticipant(
-                              participant,
-                              name
-                            )
-                          }
-                        >
-                          {muting ===
-                          participant.identity
-                            ? "Muting..."
-                            : "Mute Participant"}
-                        </button>
+                    <button
+                        type="button"
+                        disabled={
+                        stoppingVideo === participant.identity
+                        }
+                        onClick={() =>
+                        stopParticipantVideo(
+                            participant,
+                            name
+                        )
+                        }
+                    >
+                        {stoppingVideo === participant.identity
+                        ? "Stopping Video..."
+                        : "Stop Video"}
+                    </button>
 
+                    <button
+                        type="button"
+                        className="participant-remove-action"
+                        disabled={
+                        removing === participant.identity
+                        }
+                        onClick={() =>
+                        removeParticipant(
+                            participant.identity,
+                            name
+                        )
+                        }
+                    >
+                        {removing === participant.identity
+                        ? "Removing..."
+                        : "Remove Participant"}
+                    </button>
 
-                        {/* REMOVE */}
-
-                        <button
-                          type="button"
-                          className="participant-remove-action"
-                          disabled={
-                            removing ===
-                            participant.identity
-                          }
-                          onClick={() =>
-                            removeParticipant(
-                              participant.identity,
-                              name
-                            )
-                          }
-                        >
-                          {removing ===
-                          participant.identity
-                            ? "Removing..."
-                            : "Remove Participant"}
-                        </button>
-
-                      </div>
+                    </div>
 
                     )}
 

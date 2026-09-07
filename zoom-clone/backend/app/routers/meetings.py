@@ -373,3 +373,51 @@ async def mute_participant(
             status_code=500,
             detail=str(e),
         )
+        
+@router.post("/{meeting_id}/stop-video")
+async def stop_participant_video(
+    meeting_id: str,
+    participant_identity: str = Form(...),
+    track_sid: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    meeting = (
+        db.query(Meeting)
+        .filter(Meeting.meeting_id == meeting_id)
+        .first()
+    )
+
+    if not meeting:
+        raise HTTPException(
+            status_code=404,
+            detail="Meeting not found",
+        )
+
+    if meeting.host_id != current_user.id:
+        raise HTTPException(
+            status_code=403,
+            detail="Only the host can stop a participant's video",
+        )
+
+    try:
+        result = await mute_livekit_participant(
+            room_name=meeting.meeting_id,
+            participant_identity=participant_identity,
+            track_sid=track_sid,
+            muted=True,
+        )
+
+        return {
+            "message": "Participant video stopped",
+            "participant_identity": participant_identity,
+            "track_sid": track_sid,
+        }
+
+    except Exception as e:
+        print("Stop participant video error:", e)
+
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to stop participant video",
+        )
