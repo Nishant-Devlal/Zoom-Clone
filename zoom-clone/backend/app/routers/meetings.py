@@ -1,8 +1,8 @@
 import random
-
+from app.models.user import User
+from app.utils.security import get_current_user
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.models.meeting import Meeting
 from app.schemas.meeting import (
@@ -43,13 +43,14 @@ def get_unique_meeting_id(db: Session):
 @router.post("", response_model=MeetingResponse)
 def create_meeting(
     data: CreateMeetingRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     meeting_id = get_unique_meeting_id(db)
 
     meeting = Meeting(
         meeting_id=meeting_id,
-        host_id=1,
+        host_id=current_user.id,
         title=data.title,
         scheduled_at=None,
     )
@@ -65,19 +66,17 @@ def create_meeting(
 # SCHEDULE MEETING
 # ---------------------------------------
 
-@router.post(
-    "/schedule",
-    response_model=MeetingResponse
-)
+@router.post("/schedule", response_model=MeetingResponse)
 def schedule_meeting(
     data: ScheduleMeetingRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     meeting_id = get_unique_meeting_id(db)
 
     meeting = Meeting(
         meeting_id=meeting_id,
-        host_id=1,
+        host_id=current_user.id,
         title=data.title,
         scheduled_at=data.scheduled_at,
     )
@@ -125,7 +124,8 @@ def get_meeting(
     response_model=list[MeetingResponse]
 )
 def get_upcoming_meetings(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     from datetime import datetime, timezone
 
@@ -133,6 +133,7 @@ def get_upcoming_meetings(
 
     meetings = (
         db.query(Meeting)
+        .filter(Meeting.host_id == current_user.id)
         .filter(Meeting.scheduled_at != None)
         .filter(Meeting.scheduled_at >= now)
         .order_by(Meeting.scheduled_at.asc())

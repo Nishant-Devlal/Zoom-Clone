@@ -20,8 +20,18 @@ export default function UpcomingMeetings() {
 
   const fetchMeetings = async () => {
     try {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        return;
+      }
+
       const response = await fetch(
-        "http://127.0.0.1:8000/api/meetings/upcoming/list"
+        "http://127.0.0.1:8000/api/meetings/upcoming/list",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       if (!response.ok) {

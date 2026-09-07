@@ -27,12 +27,20 @@ export default function MeetingActions() {
 
   const createMeeting = async () => {
     try {
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
       const response = await fetch(
         "http://127.0.0.1:8000/api/meetings",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             title: "Instant Meeting",
@@ -41,7 +49,11 @@ export default function MeetingActions() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to create meeting");
+        const data = await response.json();
+
+        throw new Error(
+          data.detail || "Failed to create meeting"
+        );
       }
 
       const meeting = await response.json();
@@ -49,7 +61,12 @@ export default function MeetingActions() {
       router.push(`/meeting/${meeting.meeting_id}`);
     } catch (error) {
       console.error("Create meeting error:", error);
-      alert("Unable to create meeting");
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Unable to create meeting"
+      );
     }
   };
 
@@ -110,12 +127,20 @@ export default function MeetingActions() {
     try {
       setScheduleError("");
 
+      const token = localStorage.getItem("access_token");
+
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
       const response = await fetch(
         "http://127.0.0.1:8000/api/meetings/schedule",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             title: scheduleTitle.trim(),
@@ -140,11 +165,9 @@ export default function MeetingActions() {
       setScheduleDate("");
       setScheduleTime("");
 
-      // Refresh homepage data
       window.dispatchEvent(
         new Event("meeting-scheduled")
       );
-
     } catch (error) {
       console.error("Schedule error:", error);
 
@@ -358,7 +381,7 @@ export default function MeetingActions() {
           </div>
         </div>
       )}
-      
+
     </>
   );
 }
