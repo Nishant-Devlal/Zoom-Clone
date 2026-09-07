@@ -7,9 +7,16 @@ from app.database import Base
 class User(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
 
-    name = Column(String(100), nullable=False)
+    name = Column(
+        String(100),
+        nullable=False
+    )
 
     email = Column(
         String(255),
@@ -21,6 +28,11 @@ class User(Base):
     password_hash = Column(
         String(255),
         nullable=False
+    )
+
+    profile_picture = Column(
+        String(500),
+        nullable=True
     )
 
     created_at = Column(
