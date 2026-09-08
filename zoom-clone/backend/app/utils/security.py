@@ -22,10 +22,8 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
 
 password_hash = PasswordHash.recommended()
 
-
 def hash_password(password: str) -> str:
     return password_hash.hash(password)
-
 
 def verify_password(
     password: str,
@@ -36,9 +34,7 @@ def verify_password(
         hashed_password
     )
 
-
 def create_access_token(user_id: int) -> str:
-
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
@@ -56,7 +52,6 @@ def create_access_token(user_id: int) -> str:
     
 security = HTTPBearer()
 
-
 def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db),
@@ -69,9 +64,7 @@ def get_current_user(
             SECRET_KEY,
             algorithms=[ALGORITHM],
         )
-
         user_id = payload.get("sub")
-
         if not user_id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -97,5 +90,4 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",
         )
-
     return user

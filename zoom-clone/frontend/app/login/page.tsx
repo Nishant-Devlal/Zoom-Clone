@@ -7,14 +7,11 @@ import { Video, Eye, EyeOff, Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -98,7 +95,6 @@ export default function LoginPage() {
 
           <div className="auth-field">
             <label>Email</label>
-
             <input
               type="email"
               value={email}

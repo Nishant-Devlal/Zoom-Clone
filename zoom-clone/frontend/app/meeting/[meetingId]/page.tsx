@@ -70,16 +70,12 @@ function MeetingControls({
 export default function MeetingPage() {
   const params = useParams();
   const router = useRouter();
-
   const meetingId = params.meetingId as string;
-
   const [token, setToken] = useState<string | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const [isHost, setIsHost] = useState(false);
   const [endingMeeting, setEndingMeeting] = useState(false);
-
   const [meetingTitle, setMeetingTitle] = useState("Meeting");
   const [meetingData, setMeetingData] = useState<any>(null);
   const [copied, setCopied] = useState(false);
@@ -88,20 +84,14 @@ export default function MeetingPage() {
   const [isMeetingLocked, setIsMeetingLocked] = useState(false);
   const [lockingMeeting, setLockingMeeting] = useState(false);
 
-
-  // ---------------------------------------
   // INITIALIZE MEETING
-  // ---------------------------------------
 
   useEffect(() => {
     if (!meetingId) return;
 
     async function initializeMeeting() {
       try {
-        // ---------------------------------------
         // AUTHENTICATION
-        // ---------------------------------------
-
         const authToken =
           localStorage.getItem("access_token");
 
@@ -110,10 +100,7 @@ export default function MeetingPage() {
           return;
         }
 
-        // ---------------------------------------
         // GET USER
-        // ---------------------------------------
-
         const storedUser =
           localStorage.getItem("user");
 
@@ -124,10 +111,7 @@ export default function MeetingPage() {
 
         const user = JSON.parse(storedUser);
 
-        // ---------------------------------------
         // GET MEETING
-        // ---------------------------------------
-
         const meetingResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}`,
           {
@@ -154,19 +138,12 @@ export default function MeetingPage() {
           meeting.locked === true
         );
 
-        // ---------------------------------------
         // CHECK HOST
-        // ---------------------------------------
-
         const host =
           meeting.host_id === user.id;
-
         setIsHost(host);
 
-        // ---------------------------------------
         // START MEETING
-        // ---------------------------------------
-
         if (host) {
           const startResponse =
             await fetch(
@@ -195,10 +172,7 @@ export default function MeetingPage() {
           );
         }
 
-        // ---------------------------------------
         // GET LIVEKIT TOKEN
-        // ---------------------------------------
-
         const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token`,
         {
@@ -262,11 +236,7 @@ export default function MeetingPage() {
 
   }, [meetingId, router]);
 
-
-  // ---------------------------------------
   // COPY INVITATION
-  // ---------------------------------------
-
   const copyInvitation = async () => {
     const meetingLink =
       `${window.location.origin}/meeting/${meetingId}`;
@@ -297,10 +267,7 @@ export default function MeetingPage() {
     }
   };
 
-// ---------------------------------------
 // LOCK / UNLOCK MEETING
-// ---------------------------------------
-
 const toggleMeetingLock = async () => {
   if (!isHost || lockingMeeting) {
     return;
@@ -361,10 +328,7 @@ const toggleMeetingLock = async () => {
   }
 };
 
-  // ---------------------------------------
   // END MEETING
-  // ---------------------------------------
-
   const endMeeting = async (room: any) => {
     if (!isHost || endingMeeting) {
       return;
@@ -433,11 +397,7 @@ const toggleMeetingLock = async () => {
   onEndMeeting={endMeeting}
   />
 
-
-  // ---------------------------------------
   // ERROR
-  // ---------------------------------------
-
   if (error) {
     return (
       <div className="meeting-error-screen">
@@ -472,11 +432,7 @@ const toggleMeetingLock = async () => {
     );
   }
 
-
-  // ---------------------------------------
   // LOADING
-  // ---------------------------------------
-
   if (!token || !serverUrl) {
     return (
       <div className="meeting-loading-screen">
@@ -503,17 +459,11 @@ const toggleMeetingLock = async () => {
     );
   }
 
-
-  // ---------------------------------------
   // MEETING ROOM
-  // ---------------------------------------
-
   return (
     <div className="zoom-meeting-container">
 
-      {/* =====================================
-          TOP BAR
-      ===================================== */}
+      {/* TOP BAR */}
 
       <header className="meeting-topbar">
 
@@ -547,7 +497,6 @@ const toggleMeetingLock = async () => {
           </div>
 
         </div>
-
 
         <div className="meeting-topbar-right">
 
@@ -624,9 +573,7 @@ const toggleMeetingLock = async () => {
       </header>
 
 
-      {/* =====================================
-          LIVEKIT ROOM
-      ===================================== */}
+      {/* LIVEKIT ROOM */}
 
       <div className="meeting-video-area">
 
@@ -680,9 +627,6 @@ const toggleMeetingLock = async () => {
         </LiveKitRoom>
 
       </div>
-
-
-      
 
     </div>
   );

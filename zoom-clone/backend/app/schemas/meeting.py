@@ -1,15 +1,12 @@
 from datetime import datetime
 from pydantic import BaseModel
 
-
 class CreateMeetingRequest(BaseModel):
     title: str = "Instant Meeting"
-
 
 class ScheduleMeetingRequest(BaseModel):
     title: str
     scheduled_at: datetime
-
 
 class MeetingResponse(BaseModel):
     id: int

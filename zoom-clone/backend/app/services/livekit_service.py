@@ -1,5 +1,4 @@
 import os
-
 from dotenv import load_dotenv
 from livekit import api
 
@@ -8,7 +7,6 @@ load_dotenv()
 LIVEKIT_URL = os.getenv("LIVEKIT_URL")
 LIVEKIT_API_KEY = os.getenv("LIVEKIT_API_KEY")
 LIVEKIT_API_SECRET = os.getenv("LIVEKIT_API_SECRET")
-
 
 def create_livekit_token(room_name: str, participant_name: str):
     if not LIVEKIT_API_KEY:
@@ -98,10 +96,8 @@ async def remove_livekit_participant(
     room_name: str,
     participant_identity: str,
 ):
-    """
-    Remove a specific participant from a LiveKit room.
-    """
 
+    # Remove a specific participant from a LiveKit room.
     if not LIVEKIT_URL:
         raise RuntimeError("LIVEKIT_URL is not set")
 
@@ -139,10 +135,8 @@ async def mute_livekit_participant(
     track_sid: str,
     muted: bool = True,
 ):
-    """
-    Mute or unmute a participant's published track.
-    """
 
+    # Mute or unmute a participant's published track.
     if not LIVEKIT_URL:
         raise RuntimeError("LIVEKIT_URL is not set")
 

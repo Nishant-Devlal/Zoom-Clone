@@ -2,10 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
-
 import {
   CalendarDays,
   Clock3,
@@ -45,10 +43,7 @@ export default function MeetingsPage() {
   const [currentDate, setCurrentDate] =
     useState("");
 
-  /* =====================================================
-     SYSTEM DATE + TIME
-     ===================================================== */
-
+  /* SYSTEM DATE + TIME */
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
@@ -80,17 +75,11 @@ export default function MeetingsPage() {
     return () => clearInterval(interval);
   }, []);
 
-  /* =====================================================
-     AUTH + GET UPCOMING MEETINGS
-     ===================================================== */
-
+  /* AUTH + GET UPCOMING MEETINGS */
   const loadMeetings = async () => {
     try {
       setLoading(true);
-
-      const token =
-        localStorage.getItem("access_token");
-
+      const token = localStorage.getItem("access_token");
       if (!token) {
         router.replace("/login");
         return;
@@ -116,10 +105,7 @@ export default function MeetingsPage() {
 
       setMeetings(data);
 
-      /*
-       * Automatically select the first upcoming
-       * meeting.
-       */
+      /* Automatically select the first upcoming meeting.*/
       if (data.length > 0) {
         setSelectedMeeting(data[0]);
       } else {
@@ -139,10 +125,7 @@ export default function MeetingsPage() {
     loadMeetings();
   }, []);
 
-  /* =====================================================
-     FORMAT DATE
-     ===================================================== */
-
+  /* FORMAT DATE */
   const formatMeetingDate = (
     dateString: string | null
   ) => {
@@ -160,10 +143,7 @@ export default function MeetingsPage() {
     });
   };
 
-  /* =====================================================
-     FORMAT TIME
-     ===================================================== */
-
+  /* FORMAT TIME */
   const formatMeetingTime = (
     dateString: string | null
   ) => {
@@ -179,10 +159,7 @@ export default function MeetingsPage() {
     });
   };
 
-  /* =====================================================
-     COPY INVITATION
-     ===================================================== */
-
+  /* COPY INVITATION */
   const copyInvitation = async (
     meeting: Meeting
   ) => {
@@ -191,12 +168,10 @@ export default function MeetingsPage() {
 
     const invitation =
       `You are invited to a meeting.
-
-Meeting: ${meeting.title}
-Meeting ID: ${meeting.meeting_id}
-
-Join meeting:
-${meetingLink}`;
+      Meeting: ${meeting.title}
+      Meeting ID: ${meeting.meeting_id}
+      Join meeting:
+      ${meetingLink}`;
 
     try {
       await navigator.clipboard.writeText(
@@ -216,10 +191,7 @@ ${meetingLink}`;
     }
   };
 
-  /* =====================================================
-     START MEETING
-     ===================================================== */
-
+  /* START MEETING */
   const startMeeting = (
     meeting: Meeting
   ) => {
@@ -228,32 +200,17 @@ ${meetingLink}`;
     );
   };
 
-  /* =====================================================
-     EDIT
-     ===================================================== */
-
+  /* EDIT */
   const editMeeting = (
     meeting: Meeting
   ) => {
-    /*
-     * Your backend currently does not expose an
-     * update-meeting endpoint, so don't pretend
-     * editing is implemented yet.
-     *
-     * We can add the real Edit Meeting functionality
-     * after the UI is complete.
-     */
     alert(
       `Edit Meeting\n\n${meeting.title}\nMeeting ID: ${meeting.meeting_id}\n\nEdit functionality can be connected to the backend next.`
     );
   };
 
-  /* =====================================================
-     * DISPLAY MEETING
-     * ===================================================== */
-
-  const displayMeeting =
-    selectedMeeting;
+  /* DISPLAY MEETING */
+  const displayMeeting = selectedMeeting;
 
   return (
     <div className="zoom-app zoom-meetings-page">
@@ -266,9 +223,7 @@ ${meetingLink}`;
 
         <main className="meetings-main">
 
-          {/* =================================================
-              LEFT MEETING LIST
-          ================================================= */}
+          {/* LEFT MEETING LIST */}
 
           <aside className="meetings-list-panel">
 
@@ -356,12 +311,8 @@ ${meetingLink}`;
           </aside>
 
 
-          {/* =================================================
-              RIGHT MEETING DETAILS
-          ================================================= */}
-
+          {/* RIGHT MEETING DETAILS */}
           <section className="meeting-details-panel">
-
             {displayMeeting ? (
 
               <>
@@ -376,9 +327,7 @@ ${meetingLink}`;
                     {displayMeeting.meeting_id}
                   </div>
 
-
                   {/* ACTIONS */}
-
                   <div className="meeting-details-actions">
 
                     <button

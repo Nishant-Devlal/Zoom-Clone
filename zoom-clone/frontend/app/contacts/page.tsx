@@ -22,7 +22,6 @@ export default function ContactsPage() {
 
       <div className="search-box">
         <Search size={20} />
-
         <input
           type="text"
           placeholder="Search contacts..."
@@ -33,9 +32,7 @@ export default function ContactsPage() {
         <div className="empty-icon">
           👥
         </div>
-
         <h2>No contacts yet</h2>
-
         <p>
           Add contacts to quickly invite them to meetings.
         </p>

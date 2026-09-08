@@ -19,7 +19,7 @@ export default function ChatPage() {
         </div>
 
         <h2>No conversations yet</h2>
-
+        
         <p>
           Start a conversation with your contacts.
         </p>

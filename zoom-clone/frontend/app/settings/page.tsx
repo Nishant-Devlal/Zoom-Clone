@@ -44,9 +44,7 @@ export default function SettingsPage() {
 
   const [saved, setSaved] = useState(false);
 
-  // ---------------------------------------------------------
   // Load settings
-  // ---------------------------------------------------------
 
   useEffect(() => {
     const storedSettings = localStorage.getItem("zoom_settings");
@@ -65,10 +63,7 @@ export default function SettingsPage() {
     }
   }, []);
 
-  // ---------------------------------------------------------
   // Apply theme
-  // ---------------------------------------------------------
-
     useEffect(() => {
     const mediaQuery = window.matchMedia(
         "(prefers-color-scheme: dark)"
@@ -110,10 +105,7 @@ export default function SettingsPage() {
     };
     }, [settings.theme]);
 
-  // ---------------------------------------------------------
   // Update setting
-  // ---------------------------------------------------------
-
   const updateSetting = <K extends keyof Settings>(
     key: K,
     value: Settings[K]
@@ -126,10 +118,7 @@ export default function SettingsPage() {
     setSaved(false);
   };
 
-  // ---------------------------------------------------------
   // Save settings
-  // ---------------------------------------------------------
-
   const saveSettings = () => {
     localStorage.setItem(
       "zoom_settings",
@@ -143,10 +132,7 @@ export default function SettingsPage() {
     }, 2500);
   };
 
-  // ---------------------------------------------------------
   // Toggle
-  // ---------------------------------------------------------
-
   const Toggle = ({
     checked,
     onChange,
@@ -171,9 +157,7 @@ export default function SettingsPage() {
   return (
     <div className="settings-page">
 
-      {/* ================================================= */}
       {/* HEADER */}
-      {/* ================================================= */}
 
       <div className="settings-header">
 
@@ -193,19 +177,11 @@ export default function SettingsPage() {
 
       </div>
 
-
-      {/* ================================================= */}
       {/* SETTINGS LAYOUT */}
-      {/* ================================================= */}
-
       <div className="settings-layout">
 
-        {/* ================================================= */}
         {/* SIDEBAR */}
-        {/* ================================================= */}
-
         <aside className="settings-sidebar">
-
           <div className="settings-sidebar-title">
             Settings
           </div>
@@ -245,19 +221,11 @@ export default function SettingsPage() {
 
         </aside>
 
-
-        {/* ================================================= */}
         {/* CONTENT */}
-        {/* ================================================= */}
-
         <main className="settings-content">
 
-          {/* =============================================== */}
           {/* APPEARANCE */}
-          {/* =============================================== */}
-
           <section className="settings-card">
-
             <div className="settings-card-header">
 
               <div className="settings-section-icon">
@@ -273,11 +241,9 @@ export default function SettingsPage() {
 
             </div>
 
-
             <div className="theme-options">
 
               {/* Light */}
-
               <button
                 className={`theme-option ${
                   settings.theme === "light"
@@ -306,9 +272,7 @@ export default function SettingsPage() {
 
               </button>
 
-
               {/* Dark */}
-
               <button
                 className={`theme-option ${
                   settings.theme === "dark"
@@ -337,9 +301,7 @@ export default function SettingsPage() {
 
               </button>
 
-
               {/* System */}
-
               <button
                 className={`theme-option ${
                   settings.theme === "system"
@@ -372,11 +334,7 @@ export default function SettingsPage() {
 
           </section>
 
-
-          {/* =============================================== */}
           {/* MEETING SETTINGS */}
-          {/* =============================================== */}
-
           <section
             id="meeting-settings"
             className="settings-card"
@@ -398,11 +356,9 @@ export default function SettingsPage() {
 
             </div>
 
-
             {/* Audio */}
 
             <div className="settings-row">
-
               <div className="settings-row-left">
 
                 <div className="settings-row-icon">
@@ -419,7 +375,6 @@ export default function SettingsPage() {
                     when entering a meeting.
                   </p>
                 </div>
-
               </div>
 
               <Toggle
@@ -433,7 +388,6 @@ export default function SettingsPage() {
               />
 
             </div>
-
 
             {/* Video */}
 
@@ -472,11 +426,7 @@ export default function SettingsPage() {
 
           </section>
 
-
-          {/* =============================================== */}
           {/* NOTIFICATIONS */}
-          {/* =============================================== */}
-
           <section
             id="notification-settings"
             className="settings-card"
@@ -497,7 +447,6 @@ export default function SettingsPage() {
               </div>
 
             </div>
-
 
             {/* Meeting notifications */}
 
@@ -535,7 +484,6 @@ export default function SettingsPage() {
               />
 
             </div>
-
 
             {/* Chat notifications */}
 
@@ -576,11 +524,7 @@ export default function SettingsPage() {
 
           </section>
 
-
-          {/* =============================================== */}
           {/* AUDIO / VIDEO */}
-          {/* =============================================== */}
-
           <section className="settings-card">
 
             <div className="settings-card-header">
@@ -599,7 +543,6 @@ export default function SettingsPage() {
 
             </div>
 
-
             <div className="device-info">
 
               <div className="device-item">
@@ -616,7 +559,6 @@ export default function SettingsPage() {
                 <ChevronRight size={18} />
 
               </div>
-
 
               <div className="device-item">
 
@@ -643,11 +585,7 @@ export default function SettingsPage() {
 
           </section>
 
-
-          {/* =============================================== */}
           {/* SAVE */}
-          {/* =============================================== */}
-
           <div className="settings-save-area">
 
             {saved && (
