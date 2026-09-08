@@ -92,54 +92,54 @@ Designed to work across:
 
 ## Frontend
 
-Next.js - Frontend framework 
-React - UI development
-TypeScript - Type-safe frontend development
-CSS - Styling and responsive layouts
-Lucide React - Icons
-LiveKit Components - Video conferencing UI
-LiveKit Client SDK - Real-time communication
+Next.js - Frontend framework  
+React - UI development  
+TypeScript - Type-safe frontend development  
+CSS - Styling and responsive layouts  
+Lucide React - Icons  
+LiveKit Components - Video conferencing UI  
+LiveKit Client SDK - Real-time communication  
 
 
 ## Backend
 
-Python - Backend development
-FastAPI - REST API framework
-SQLAlchemy - ORM
-PostgreSQL - Relational database
-Pydantic - Data validation
-PyJWT - JWT authentication
-pwdlib - Secure password hashing
-Argon2 - Password hashing algorithm
-python-multipart - File uploads
-LiveKit API - Meeting/token management
-Cloudinary - Profile image storage
+Python - Backend development  
+FastAPI - REST API framework  
+SQLAlchemy - ORM  
+PostgreSQL - Relational database  
+Pydantic - Data validation  
+PyJWT - JWT authentication  
+pwdlib - Secure password hashing  
+Argon2 - Password hashing algorithm  
+python-multipart - File uploads  
+LiveKit API - Meeting/token management  
+Cloudinary - Profile image storage  
 
 
 ## Infrastructure & Deployment
 
-Vercel - Frontend & backend deployment
-PostgreSQL - Production database
-LiveKit Cloud - Real-time video/audio infrastructure
-Cloudinary - Image storage
-GitHub - Source control
+Vercel - Frontend & backend deployment  
+PostgreSQL - Production database  
+LiveKit Cloud - Real-time video/audio infrastructure  
+Cloudinary - Image storage  
+GitHub - Source control  
 
 # Screenshots
 1. Home Page
 <img width="1920" height="1080" alt="Screenshot (229)" src="https://github.com/user-attachments/assets/5179b35c-496e-420b-952d-65d3b79de7de" />  
-
+  
 2. History Page
 <img width="1920" height="1080" alt="Screenshot (230)" src="https://github.com/user-attachments/assets/113221fc-7274-4b29-87e7-263b8d264a8c" />
-
+  
 3. Profile Page
 <img width="1920" height="1080" alt="Screenshot (231)" src="https://github.com/user-attachments/assets/e2137a69-54f5-4c4d-83bb-cada8b0fec23" />
-
+  
 4. Meeting Page
 <img width="1920" height="1080" alt="Screenshot (232)" src="https://github.com/user-attachments/assets/6024fd82-5877-40ae-9d70-2a7af195e2e7" />
-
+  
 5. Settings Page
 <img width="1920" height="1080" alt="Screenshot (233)" src="https://github.com/user-attachments/assets/85027035-2429-4d61-ad1f-fec29fd111f5" />
-
+  
 
 
 
