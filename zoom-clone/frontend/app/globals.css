@@ -2539,3 +2539,848 @@ button.secure-badge:disabled { opacity: 0.6; cursor: wait; }
 .zoom-meeting-container > .host-end-meeting:hover {
   background: #c82333 !important;
 }
+
+/* =========================================================
+   FINAL RESPONSIVE OVERRIDES
+   ---------------------------------------------------------
+   These rules are intentionally placed at the end so they
+   take precedence over earlier desktop/mobile overrides.
+   Desktop layout remains unchanged.
+   ========================================================= */
+
+/* Global viewport safety */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.zoom-app,
+.zoom-home-page,
+.zoom-meetings-page {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.app-body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.zoom-dashboard-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+  max-width: none;
+}
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .zoom-dashboard-content {
+    min-width: 0;
+  }
+
+  .zoom-calendar-card {
+    max-width: 100%;
+  }
+
+  .meetings-main {
+    min-width: 0;
+  }
+
+  .meeting-details-panel,
+  .meeting-details-content {
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   MOBILE - HOME / DASHBOARD
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  /* ---------- Navbar ---------- */
+
+  .zoom-navbar {
+    width: 100%;
+    min-width: 0;
+    height: 58px;
+    min-height: 58px;
+    padding: 0 9px;
+    gap: 6px;
+  }
+
+  .zoom-navbar-left {
+    width: auto;
+    min-width: 0;
+    flex: 0 0 auto;
+    gap: 6px;
+  }
+
+  .zoom-workplace-logo {
+    flex: 0 0 auto;
+    min-width: 0;
+  }
+
+  .zoom-workplace-logo span {
+    font-size: 12px;
+  }
+
+  .zoom-workplace-logo strong {
+    font-size: 14px;
+  }
+
+  .zoom-navigation-controls {
+    flex: 0 0 auto;
+    gap: 0;
+  }
+
+  .zoom-navigation-controls button {
+    width: 25px;
+    height: 25px;
+  }
+
+  .zoom-navigation-controls button svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .zoom-navbar-search {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: auto;
+    overflow: hidden;
+  }
+
+  .zoom-search-box {
+    width: 100%;
+    max-width: 190px;
+    min-width: 0;
+    height: 36px;
+    padding: 0 10px;
+  }
+
+  .zoom-search-box input {
+    width: 100%;
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .zoom-search-box svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .zoom-navbar-right {
+    width: auto;
+    min-width: 0;
+    flex: 0 0 auto;
+    gap: 4px;
+  }
+
+  .upgrade-button {
+    display: none;
+  }
+
+  .zoom-navbar-profile {
+    flex-shrink: 0;
+  }
+
+  /* ---------- App body / sidebar ---------- */
+
+  .app-body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 58px);
+    height: auto;
+    display: flex;
+  }
+
+  .zoom-sidebar {
+    flex: 0 0 68px;
+    width: 68px;
+    min-width: 68px;
+    max-width: 68px;
+    min-height: calc(100vh - 58px);
+    height: auto;
+    padding: 4px 5px 8px;
+  }
+
+  .zoom-sidebar-nav {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .zoom-sidebar-item {
+    width: 100%;
+    min-width: 0;
+    height: 57px;
+    min-height: 57px;
+    padding: 5px 2px;
+    border-radius: 9px;
+    gap: 4px;
+    font-size: 9px;
+  }
+
+  .zoom-sidebar-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* ---------- Dashboard ---------- */
+
+  .zoom-dashboard-content {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 34px 12px 24px;
+    overflow-x: hidden;
+  }
+
+  .zoom-welcome {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 25px;
+  }
+
+  .zoom-welcome h1 {
+    font-size: 38px;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+
+  .zoom-welcome p {
+    font-size: 15px;
+  }
+
+  /* New Meeting / Join / Schedule */
+  .zoom-dashboard-actions {
+    width: 100%;
+    max-width: 350px;
+    min-width: 0;
+    margin-bottom: 26px;
+  }
+
+  .zoom-dashboard-actions .meeting-actions {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .zoom-dashboard-actions .meeting-action {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    padding: 0;
+    gap: 8px;
+  }
+
+  .zoom-dashboard-actions .meeting-action-icon,
+  .zoom-dashboard-actions .action-icon {
+    width: 58px;
+    height: 58px;
+    min-width: 58px;
+    min-height: 58px;
+    border-radius: 18px;
+  }
+
+  .zoom-dashboard-actions .meeting-action h3,
+  .zoom-dashboard-actions .meeting-action strong {
+    width: 100%;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  /* Calendar */
+  .zoom-calendar-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .calendar-connect-banner {
+    min-width: 0;
+    margin: 9px 9px 0;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .calendar-connect-banner p {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .calendar-heading {
+    width: 100%;
+    min-width: 0;
+    padding: 0 14px;
+  }
+
+  .calendar-toolbar {
+    padding: 0 12px;
+  }
+
+  .zoom-calendar-meetings {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Scheduled meeting card:
+     Put the meeting details on top and the action buttons
+     underneath so they never cover the date/time. */
+  .zoom-calendar-meetings .upcoming-card {
+    width: 100%;
+    min-width: 0;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    gap: 14px !important;
+    padding: 16px 14px !important;
+  }
+
+  .zoom-calendar-meetings .upcoming-card-main {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .zoom-calendar-meetings .upcoming-icon {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .zoom-calendar-meetings .upcoming-card-main > div:last-child {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .zoom-calendar-meetings .upcoming-card h3 {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+  }
+
+  .zoom-calendar-meetings .meeting-time {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px 12px;
+    font-size: 12px;
+  }
+
+  .zoom-calendar-meetings .meeting-id {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+
+  .zoom-calendar-meetings .upcoming-actions {
+    width: 100%;
+    min-width: 0;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .zoom-calendar-meetings .secondary-meeting-btn,
+  .zoom-calendar-meetings .primary-meeting-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 42px !important;
+    height: auto !important;
+    padding: 8px 9px !important;
+    white-space: normal !important;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 12px !important;
+  }
+
+  .zoom-calendar-meetings .secondary-meeting-btn svg,
+  .zoom-calendar-meetings .primary-meeting-btn svg {
+    flex-shrink: 0;
+  }
+
+  .calendar-footer {
+    width: 100%;
+  }
+
+  /* ---------- Meetings page ---------- */
+
+  .zoom-meetings-page {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .meetings-main {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: calc(100vh - 58px);
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+  }
+
+  .meetings-list-panel {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #e4e6e9;
+  }
+
+  .meetings-list-content {
+    width: 100%;
+    min-width: 0;
+    padding: 0 12px 12px;
+  }
+
+  .meeting-list-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .meeting-details-panel {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    min-height: 420px;
+    overflow-y: visible;
+  }
+
+  .meeting-details-content {
+    width: 100%;
+    min-width: 0;
+    padding: 30px 16px 42px;
+  }
+
+  .meeting-details-content h1 {
+    max-width: 100%;
+    font-size: 25px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+
+  .meeting-details-id {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  /* Fix Start / Copy Invitation / Edit buttons.
+     They now have enough width and can never push text
+     outside their boundaries. */
+  .meeting-details-actions {
+    width: 100%;
+    min-width: 0;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 10px !important;
+    margin-top: 30px !important;
+  }
+
+  .meeting-start-button,
+  .meeting-copy-button,
+  .meeting-edit-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    min-height: 44px !important;
+    height: auto !important;
+    padding: 8px 10px !important;
+    white-space: normal !important;
+    text-align: center;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    font-size: 12px !important;
+  }
+
+  /* Make Copy Invitation occupy the full row when it is
+     the wider button. The selector works regardless of
+     button order when the copy button is present. */
+  .meeting-details-actions .meeting-copy-button {
+    grid-column: 1 / -1;
+  }
+
+  .meeting-schedule-info {
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    margin-top: 28px;
+  }
+
+  .meeting-schedule-info div {
+    min-width: 0;
+  }
+
+  /* ---------- Profile ---------- */
+
+  .profile-page {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 24px 12px 36px !important;
+    overflow-x: hidden;
+  }
+
+  .profile-header,
+  .profile-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  /* ---------- Settings ---------- */
+
+  .settings-page {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 24px 12px 40px;
+    overflow-x: hidden;
+  }
+
+  .settings-layout {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .settings-sidebar {
+    position: static;
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .settings-sidebar-title {
+    grid-column: 1 / -1;
+  }
+
+  .settings-content,
+  .settings-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .settings-card {
+    padding: 20px 16px;
+  }
+
+  /* ---------- History ---------- */
+
+  .navbar-history-popup {
+    position: fixed;
+    top: 62px;
+    left: 10px;
+    right: 10px;
+    width: auto !important;
+    max-width: calc(100vw - 20px);
+  }
+
+  /* ---------- Meeting room ---------- */
+
+  .zoom-meeting-container {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 100dvh;
+  }
+
+  .meeting-topbar {
+    flex: 0 0 56px;
+    width: 100%;
+    min-width: 0;
+    height: 56px;
+    padding: 0 10px;
+  }
+
+  .meeting-topbar-left {
+    min-width: 0;
+    flex: 1 1 auto;
+    gap: 8px;
+  }
+
+  .meeting-brand {
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .meeting-divider,
+  .meeting-info {
+    display: none;
+  }
+
+  .meeting-topbar-right {
+    flex: 0 0 auto;
+    min-width: 0;
+    gap: 5px;
+  }
+
+  /* Compact top-right controls */
+  .secure-badge,
+  .invite-button,
+  .meeting-participants-button,
+  .meeting-security-button,
+  .meeting-info-button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 !important;
+    gap: 0;
+  }
+
+  .secure-badge span,
+  .invite-button span,
+  .meeting-participants-button span,
+  .meeting-security-button span,
+  .meeting-info-button span {
+    display: none;
+  }
+
+  .meeting-video-area {
+    width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+
+  .custom-livekit-room,
+  .custom-livekit-room .lk-video-conference {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Reserve the right side for the host's End Meeting
+     button. This prevents it from covering LiveKit's
+     Chat button or other meeting controls. */
+  .custom-livekit-room .lk-control-bar {
+    position: absolute !important;
+    left: 8px !important;
+    right: 154px !important;
+    bottom: 8px !important;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    transform: none !important;
+    z-index: 100 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    justify-content: center !important;
+  }
+
+  .custom-livekit-room .lk-control-bar > * {
+    flex-shrink: 0;
+  }
+
+  /* Host End Meeting button */
+  .zoom-meeting-container > .host-end-meeting {
+    position: absolute !important;
+    right: 10px !important;
+    bottom: 8px !important;
+    z-index: 300 !important;
+
+    width: 136px !important;
+    min-width: 136px !important;
+    max-width: 136px !important;
+    height: 42px !important;
+
+    margin: 0 !important;
+    padding: 0 10px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+  }
+
+  .zoom-meeting-container > .host-end-meeting svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+  }
+
+  /* LiveKit chat: width changes on mobile, but its
+     visibility is still controlled by LiveKit. */
+  .custom-livekit-room .lk-chat {
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .custom-livekit-room .lk-chat-header {
+    padding-left: 16px !important;
+    padding-right: 52px !important;
+  }
+
+  .custom-livekit-room .lk-chat-header .lk-close-button {
+    right: 12px !important;
+  }
+
+  .participant-panel {
+    width: min(340px, 100vw) !important;
+    max-width: 100vw !important;
+  }
+
+  .meeting-info-overlay {
+    padding: 10px;
+  }
+
+  .meeting-info-modal {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100dvh - 20px);
+  }
+}
+
+/* =========================================================
+   VERY SMALL ANDROID PHONES
+   ========================================================= */
+
+@media (max-width: 380px) {
+
+  .zoom-navbar {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .zoom-workplace-logo span {
+    font-size: 11px;
+  }
+
+  .zoom-workplace-logo strong {
+    font-size: 13px;
+  }
+
+  .zoom-search-box {
+    max-width: 145px;
+  }
+
+  .zoom-sidebar {
+    flex-basis: 60px;
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+  }
+
+  .zoom-sidebar-item {
+    font-size: 8px;
+  }
+
+  .zoom-dashboard-content {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .zoom-dashboard-actions {
+    max-width: 100%;
+  }
+
+  .zoom-dashboard-actions .meeting-actions {
+    gap: 4px;
+  }
+
+  .zoom-dashboard-actions .meeting-action-icon,
+  .zoom-dashboard-actions .action-icon {
+    width: 54px;
+    height: 54px;
+    min-width: 54px;
+    min-height: 54px;
+  }
+
+  .zoom-dashboard-actions .meeting-action h3,
+  .zoom-dashboard-actions .meeting-action strong {
+    font-size: 12px;
+  }
+
+  .zoom-calendar-meetings .upcoming-card {
+    padding: 14px 10px !important;
+  }
+
+  .zoom-calendar-meetings .upcoming-actions {
+    gap: 6px !important;
+  }
+
+  .zoom-calendar-meetings .secondary-meeting-btn,
+  .zoom-calendar-meetings .primary-meeting-btn {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: 11px !important;
+  }
+
+  .meeting-details-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .meeting-details-actions {
+    gap: 8px !important;
+  }
+
+  .meeting-start-button,
+  .meeting-copy-button,
+  .meeting-edit-button {
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+    font-size: 11px !important;
+  }
+
+  .custom-livekit-room .lk-control-bar {
+    right: 145px !important;
+    left: 6px !important;
+  }
+
+  .zoom-meeting-container > .host-end-meeting {
+    right: 7px !important;
+    width: 132px !important;
+    min-width: 132px !important;
+    max-width: 132px !important;
+    padding: 0 7px !important;
+  }
+}
