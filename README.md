@@ -159,6 +159,6 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 5. Settings Page
 <img width="1920" height="1080" alt="Screenshot (233)" src="https://github.com/user-attachments/assets/85027035-2429-4d61-ad1f-fec29fd111f5" />
   
-Try yourself at https://zoom-clone-frontend-three.vercel.app/  
+Try yourself at https://zoom-clone-nishant.vercel.app/  
 
 
