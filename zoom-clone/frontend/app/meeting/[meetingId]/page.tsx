@@ -91,7 +91,6 @@ export default function MeetingPage() {
   const [lockingMeeting, setLockingMeeting] = useState(false);
 
   // INITIALIZE MEETING
-
   useEffect(() => {
     if (!meetingId) return;
 
@@ -463,13 +462,10 @@ const toggleMeetingLock = async () => {
   // MEETING ROOM
   return (
     <div className="zoom-meeting-workspace">
-      {/* The normal Zoom Workplace application navbar.
-          This does not affect authentication; your existing
-          meeting authentication above remains unchanged. */}
+
       <Navbar />
 
       <div className="zoom-meeting-workspace-body">
-        {/* Zoom-style left application navigation */}
         <aside className="zoom-meeting-sidebar">
           <nav className="zoom-meeting-sidebar-nav">
             <button
