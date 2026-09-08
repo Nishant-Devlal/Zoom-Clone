@@ -4089,3 +4089,321 @@ body {
     max-width: 128px !important;
   }
 }
+
+/* =========================================================
+   MOBILE MEETING HEADER
+   Icon-only controls for smartphones
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  /* -------------------------------------------------------
+     Meeting header
+     ------------------------------------------------------- */
+
+  .meeting-topbar {
+    position: relative !important;
+
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+
+    padding: 0 8px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    gap: 8px !important;
+
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+
+  /* -------------------------------------------------------
+     LEFT SIDE — Zoom Clone
+     ------------------------------------------------------- */
+
+  .meeting-topbar-left {
+    position: relative !important;
+
+    flex: 1 1 auto !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    overflow: hidden !important;
+  }
+
+  .meeting-brand {
+    flex: 0 0 auto !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    min-width: 0 !important;
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+
+    font-size: 15px !important;
+    font-weight: 600 !important;
+  }
+
+  .meeting-brand-icon {
+    flex: 0 0 42px !important;
+
+    width: 42px !important;
+    height: 42px !important;
+
+    margin-right: 8px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .meeting-brand-icon svg {
+    width: 21px !important;
+    height: 21px !important;
+  }
+
+  /* Hide unnecessary meeting information on phones */
+  .meeting-divider,
+  .meeting-info {
+    display: none !important;
+  }
+
+
+  /* -------------------------------------------------------
+     RIGHT SIDE — ICON BUTTONS
+     ------------------------------------------------------- */
+
+  .meeting-topbar-right {
+    flex: 0 0 auto !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    gap: 5px !important;
+
+    margin-left: auto !important;
+
+    position: relative !important;
+    z-index: 20 !important;
+  }
+
+
+  /* -------------------------------------------------------
+     ALL FOUR BUTTONS
+     ------------------------------------------------------- */
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button,
+  .meeting-topbar-right .invite-button {
+
+    position: relative !important;
+
+    flex: 0 0 40px !important;
+
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 0 !important;
+
+    border-radius: 8px !important;
+
+    box-sizing: border-box !important;
+
+    white-space: nowrap !important;
+  }
+
+
+  /* -------------------------------------------------------
+     HIDE TEXT
+     ------------------------------------------------------- */
+
+  .meeting-topbar-right .secure-badge span,
+  .meeting-topbar-right .meeting-participants-button span,
+  .meeting-topbar-right .meeting-security-button span,
+  .meeting-topbar-right .meeting-info-button span,
+  .meeting-topbar-right .invite-button span {
+
+    display: none !important;
+  }
+
+
+  /* If text is directly inside the button, hide it too
+     while keeping the SVG/icon visible. */
+
+  .meeting-topbar-right button {
+    font-size: 0 !important;
+  }
+
+
+  /* -------------------------------------------------------
+     ICONS
+     ------------------------------------------------------- */
+
+  .meeting-topbar-right svg {
+
+    width: 19px !important;
+    height: 19px !important;
+
+    min-width: 19px !important;
+    min-height: 19px !important;
+
+    flex: 0 0 19px !important;
+
+    display: block !important;
+  }
+
+
+  /* -------------------------------------------------------
+     HOVER / ACTIVE
+     ------------------------------------------------------- */
+
+  .meeting-topbar-right button:hover {
+    transform: none !important;
+  }
+
+  .meeting-topbar-right button:active {
+    transform: scale(0.96) !important;
+  }
+}
+
+
+/* =========================================================
+   SMALL ANDROID PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .meeting-topbar {
+    height: 56px !important;
+    min-height: 56px !important;
+
+    padding: 0 6px !important;
+    gap: 5px !important;
+  }
+
+  /* Slightly smaller logo area */
+  .meeting-brand-icon {
+    width: 40px !important;
+    height: 40px !important;
+
+    flex-basis: 40px !important;
+
+    margin-right: 7px !important;
+  }
+
+  .meeting-brand {
+    font-size: 14px !important;
+  }
+
+  /* Four icon buttons */
+  .meeting-topbar-right {
+    gap: 4px !important;
+  }
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button,
+  .meeting-topbar-right .invite-button {
+
+    flex-basis: 38px !important;
+
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+
+    border-radius: 8px !important;
+  }
+
+  .meeting-topbar-right svg {
+    width: 18px !important;
+    height: 18px !important;
+
+    min-width: 18px !important;
+    min-height: 18px !important;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .meeting-topbar {
+    padding: 0 5px !important;
+    gap: 4px !important;
+  }
+
+  .meeting-brand-icon {
+    width: 38px !important;
+    height: 38px !important;
+
+    flex-basis: 38px !important;
+
+    margin-right: 5px !important;
+  }
+
+  .meeting-brand {
+    font-size: 13px !important;
+  }
+
+  .meeting-topbar-right {
+    gap: 3px !important;
+  }
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button,
+  .meeting-topbar-right .invite-button {
+
+    flex-basis: 35px !important;
+
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+
+    height: 35px !important;
+    min-height: 35px !important;
+    max-height: 35px !important;
+  }
+
+  .meeting-topbar-right svg {
+    width: 17px !important;
+    height: 17px !important;
+  }
+}
