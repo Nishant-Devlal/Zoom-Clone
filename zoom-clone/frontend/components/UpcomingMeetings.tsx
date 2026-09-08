@@ -13,8 +13,8 @@ interface Meeting {
 }
 
 export default function UpcomingMeetings() {
-  const router = useRouter();
 
+  const router = useRouter();
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -75,13 +75,11 @@ export default function UpcomingMeetings() {
       `${window.location.origin}/meeting/${meeting.meeting_id}`;
 
     const invitation = `
-${meeting.title}
-
-Join Meeting:
-${link}
-
-Meeting ID: ${meeting.meeting_id}
-`;
+    ${meeting.title}
+    Join Meeting:
+    ${link}
+    Meeting ID: ${meeting.meeting_id}
+    `;
 
     await navigator.clipboard.writeText(
       invitation.trim()

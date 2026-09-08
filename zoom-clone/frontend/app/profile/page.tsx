@@ -255,10 +255,7 @@ export default function ProfilePage() {
     }
   };
 
-  // ---------------------------------------------------------
   // Loading state
-  // ---------------------------------------------------------
-
   if (loading) {
     return (
       <div className="profile-page">
@@ -269,15 +266,11 @@ export default function ProfilePage() {
     );
   }
 
-  // ---------------------------------------------------------
   // Render
-  // ---------------------------------------------------------
-
   return (
     <div className="profile-page">
 
       {/* Header */}
-
       <div className="profile-header">
         <button
           className="profile-back-button"
@@ -293,11 +286,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Main card */}
-
       <div className="profile-card">
 
         {/* Profile picture */}
-
         <div className="profile-picture-section">
 
           <div className="profile-avatar-large">
@@ -348,7 +339,7 @@ export default function ProfilePage() {
         <div className="profile-divider" />
 
         {/* Personal information */}
-
+        
         <div className="profile-section">
 
           <h2>Personal Information</h2>

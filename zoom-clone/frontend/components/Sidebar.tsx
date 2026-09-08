@@ -18,9 +18,9 @@ import {
 import { useState } from "react";
 
 export default function Sidebar() {
+  
   const pathname = usePathname();
   const router = useRouter();
-
   const [showMore, setShowMore] = useState(false);
 
   const isActive = (href: string) => {

@@ -50,7 +50,6 @@ export default function MeetingActions() {
 
       if (!response.ok) {
         const data = await response.json();
-
         throw new Error(
           data.detail || "Failed to create meeting"
         );
@@ -86,11 +85,6 @@ export default function MeetingActions() {
     try {
       setJoinError("");
 
-      /*
-       * Check whether the meeting exists in our database.
-       *
-       * We will add this endpoint to the backend next.
-       */
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${cleanedId}`
       );
@@ -126,9 +120,7 @@ export default function MeetingActions() {
 
     try {
       setScheduleError("");
-
       const token = localStorage.getItem("access_token");
-
       if (!token) {
         router.push("/login");
         return;

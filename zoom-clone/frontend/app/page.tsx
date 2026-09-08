@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import MeetingActions from "@/components/MeetingActions";
@@ -10,8 +9,8 @@ import UpcomingMeetings from "@/components/UpcomingMeetings";
 import PreviousMeetings from "@/components/PreviousMeetings";
 
 export default function Home() {
-  const router = useRouter();
 
+  const router = useRouter();
   const [currentTime, setCurrentTime] = useState("");
   const [currentDate, setCurrentDate] = useState("");
 
@@ -74,8 +73,6 @@ export default function Home() {
 
           {/* CALENDAR */}
           <section className="zoom-calendar-card">
-
-            
 
             {/* Date heading */}
             <div className="calendar-heading">

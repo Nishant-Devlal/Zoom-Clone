@@ -11,24 +11,16 @@ import {
 } from "lucide-react";
 
 export default function SignupPage() {
-  const router = useRouter();
 
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
-
-  const [showPassword, setShowPassword] =
-    useState(false);
-
-  const [showConfirmPassword, setShowConfirmPassword] =
-    useState(false);
-
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const handleSignup = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -40,9 +32,7 @@ export default function SignupPage() {
     }
 
     if (password.length < 6) {
-      setError(
-        "Password must be at least 6 characters."
-      );
+      setError("Password must be at least 6 characters.");
       return;
     }
 
@@ -77,10 +67,6 @@ export default function SignupPage() {
         );
       }
 
-      /*
-       * Your signup endpoint already returns the token,
-       * so we can immediately log the user in.
-       */
       localStorage.setItem(
         "access_token",
         data.access_token

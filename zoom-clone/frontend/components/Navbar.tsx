@@ -36,26 +36,13 @@ interface Meeting {
 
 export default function Navbar() {
   const router = useRouter();
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [history, setHistory] = useState<Meeting[]>([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
-  const [user, setUser] =
-    useState<UserProfile | null>(null);
-
-  const [showProfile, setShowProfile] =
-    useState(false);
-
-  const [showHistory, setShowHistory] =
-    useState(false);
-
-  const [history, setHistory] =
-    useState<Meeting[]>([]);
-
-  const [historyLoading, setHistoryLoading] =
-    useState(false);
-
-  /* =====================================================
-     LOAD PROFILE
-     ===================================================== */
-
+  /* LOAD PROFILE */
   useEffect(() => {
     const loadProfile = async () => {
       const token =
@@ -106,10 +93,7 @@ export default function Navbar() {
     loadProfile();
   }, []);
 
-  /* =====================================================
-     LOAD MEETING HISTORY
-     ===================================================== */
-
+  /* LOAD MEETING HISTORY */
   const loadHistory = async () => {
     try {
       setHistoryLoading(true);
@@ -148,10 +132,7 @@ export default function Navbar() {
     }
   };
 
-  /* =====================================================
-     HISTORY BUTTON
-     ===================================================== */
-
+  /* HISTORY BUTTON */
   const toggleHistory = async () => {
     setShowProfile(false);
 
@@ -164,10 +145,7 @@ export default function Navbar() {
     }
   };
 
-  /* =====================================================
-     LOGOUT
-     ===================================================== */
-
+  /* LOGOUT */
   const handleLogout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
@@ -175,10 +153,7 @@ export default function Navbar() {
     router.push("/login");
   };
 
-  /* =====================================================
-     FORMAT HISTORY DATE
-     ===================================================== */
-
+  /* FORMAT HISTORY DATE */
   const formatHistoryDate = (
     dateString: string | null
   ) => {
@@ -197,10 +172,7 @@ export default function Navbar() {
     });
   };
 
-  /* =====================================================
-     PROFILE AVATAR
-     ===================================================== */
-
+  /* PROFILE AVATAR */
   const ProfileAvatar = ({
     large = false,
   }: {
@@ -230,10 +202,7 @@ export default function Navbar() {
   return (
     <header className="navbar zoom-navbar">
 
-      {/* =================================================
-          LEFT
-      ================================================= */}
-
+      {/* LEFT */}
       <div className="zoom-navbar-left">
 
         <div className="zoom-workplace-logo">
@@ -259,10 +228,7 @@ export default function Navbar() {
             <ChevronRight size={18} />
           </button>
 
-          {/* ==========================================
-              HISTORY BUTTON
-          ========================================== */}
-
+          {/* HISTORY BUTTON */}
           <div className="navbar-history-wrapper">
 
             <button
@@ -383,10 +349,7 @@ export default function Navbar() {
       </div>
 
 
-      {/* =================================================
-          SEARCH
-      ================================================= */}
-
+      {/* SEARCH */}
       <div className="zoom-navbar-search">
 
         <div className="zoom-search-box">
@@ -407,10 +370,7 @@ export default function Navbar() {
       </div>
 
 
-      {/* =================================================
-          RIGHT
-      ================================================= */}
-
+      {/* RIGHT */}
       <div className="zoom-navbar-right">
 
         <div className="navbar-profile-wrapper">

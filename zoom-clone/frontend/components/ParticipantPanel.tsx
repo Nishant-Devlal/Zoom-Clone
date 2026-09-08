@@ -4,9 +4,7 @@ import {
   useParticipants,
   useLocalParticipant,
 } from "@livekit/components-react";
-
 import { Track } from "livekit-client";
-
 import {
   X,
   Mic,
@@ -16,7 +14,6 @@ import {
   MoreVertical,
   UserPlus,
 } from "lucide-react";
-
 import { useState } from "react";
 
 interface ParticipantPanelProps {
@@ -28,20 +25,16 @@ export default function ParticipantPanel({
   onClose,
   isHost,
 }: ParticipantPanelProps) {
+
   const participants = useParticipants();
   const { localParticipant } = useLocalParticipant();
-
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [removing, setRemoving] = useState<string | null>(null);
   const [muting, setMuting] = useState<string | null>(null);
   const [mutingAll, setMutingAll] = useState(false);
   const [stoppingVideo, setStoppingVideo] = useState<string | null>(null);
 
-
-  // =========================================================
   // PARTICIPANT NAME
-  // =========================================================
-
   const getParticipantName = (participant: any) => {
     return (
       participant.name ||
@@ -50,10 +43,7 @@ export default function ParticipantPanel({
     );
   };
 
-  // =========================================================
   // INITIALS
-  // =========================================================
-
   const getInitials = (name: string) => {
     const parts = name.trim().split(/\s+/);
 
@@ -67,10 +57,7 @@ export default function ParticipantPanel({
     ).toUpperCase();
   };
 
-  // =========================================================
   // MICROPHONE STATUS
-  // =========================================================
-
   const isMicrophoneEnabled = (participant: any) => {
     const publication =
       participant.getTrackPublication("microphone");
@@ -81,10 +68,7 @@ export default function ParticipantPanel({
     );
   };
 
-  // =========================================================
   // CAMERA STATUS
-  // =========================================================
-
   const isCameraEnabled = (participant: any) => {
     const publication =
       participant.getTrackPublication("camera");
@@ -95,10 +79,7 @@ export default function ParticipantPanel({
     );
   };
 
-  // =========================================================
   // ERROR MESSAGE HELPER
-  // =========================================================
-
   const getErrorMessage = (data: any, fallback: string) => {
     if (typeof data?.detail === "string") {
       return data.detail;
@@ -127,10 +108,7 @@ export default function ParticipantPanel({
     return fallback;
   };
 
-  // =========================================================
   // REMOVE PARTICIPANT
-  // =========================================================
-
   const removeParticipant = async (
     participantIdentity: string,
     participantName: string
@@ -214,10 +192,7 @@ export default function ParticipantPanel({
     }
   };
 
-  // =========================================================
   // MUTE ONE PARTICIPANT
-  // =========================================================
-
   const muteParticipant = async (
     participant: any,
     participantName: string
@@ -317,10 +292,7 @@ export default function ParticipantPanel({
     }
   };
 
-  // =========================================================
   // MUTE ALL PARTICIPANTS
-  // =========================================================
-
   const muteAllParticipants = async () => {
     const token =
       localStorage.getItem("access_token");
@@ -536,10 +508,7 @@ export default function ParticipantPanel({
   }
 };
 
-  // =========================================================
   // UI
-  // =========================================================
-
   return (
     <aside className="participant-panel">
 
@@ -569,9 +538,7 @@ export default function ParticipantPanel({
 
       </div>
 
-
       {/* INVITE */}
-
       <div className="participant-invite-section">
 
         <button
@@ -589,25 +556,17 @@ export default function ParticipantPanel({
 
       </div>
 
-
       {/* PARTICIPANT LIST */}
-
       <div className="participant-list">
 
         {participants.map((participant) => {
 
-          const name =
-            getParticipantName(participant);
-
+          const name = getParticipantName(participant);
           const isLocal =
             participant.identity ===
             localParticipant.identity;
-
-          const microphoneEnabled =
-            isMicrophoneEnabled(participant);
-
-          const cameraEnabled =
-            isCameraEnabled(participant);
+          const microphoneEnabled = isMicrophoneEnabled(participant);
+          const cameraEnabled = isCameraEnabled(participant);
 
           return (
             <div
@@ -616,14 +575,11 @@ export default function ParticipantPanel({
             >
 
               {/* AVATAR */}
-
               <div className="participant-avatar">
                 {getInitials(name)}
               </div>
 
-
               {/* NAME */}
-
               <div className="participant-info">
 
                 <div className="participant-name">
@@ -648,9 +604,7 @@ export default function ParticipantPanel({
 
               </div>
 
-
               {/* MEDIA STATUS */}
-
               <div className="participant-media-status">
 
                 {microphoneEnabled ? (
@@ -671,9 +625,7 @@ export default function ParticipantPanel({
                   />
                 )}
 
-
                 {/* HOST MENU */}
-
                 {isHost && !isLocal && (
 
                   <div className="participant-menu-wrapper">
@@ -697,9 +649,7 @@ export default function ParticipantPanel({
                       <MoreVertical size={17} />
                     </button>
 
-
                     {/* ACTION MENU */}
-
                     {openMenu ===
                       participant.identity && (
 
@@ -773,9 +723,7 @@ export default function ParticipantPanel({
 
       </div>
 
-
       {/* HOST CONTROLS */}
-
       {isHost && (
 
         <div className="participant-host-controls">
