@@ -129,19 +129,19 @@ GitHub - Source control
 DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 
 (JWT)
-SECRET_KEY=your-long-random-secret-key
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=10080
+SECRET_KEY=your-long-random-secret-key  
+ALGORITHM=HS256  
+ACCESS_TOKEN_EXPIRE_MINUTES=10080  
 
 (LiveKit Cloud)
-LIVEKIT_API_KEY=your_livekit_api_key
-LIVEKIT_API_SECRET=your_livekit_api_secret
-LIVEKIT_URL=wss://your-project.livekit.cloud
+LIVEKIT_API_KEY=your_livekit_api_key  
+LIVEKIT_API_SECRET=your_livekit_api_secret  
+LIVEKIT_URL=wss://your-project.livekit.cloud  
 
 (Cloudinary)
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name  
+CLOUDINARY_API_KEY=your_cloudinary_api_key  
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret  
 
 # Screenshots
 1. Home Page
