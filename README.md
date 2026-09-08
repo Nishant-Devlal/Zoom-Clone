@@ -124,6 +124,25 @@ LiveKit Cloud - Real-time video/audio infrastructure
 Cloudinary - Image storage  
 GitHub - Source control  
 
+# .env file format
+(PostgreSQL)
+DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
+
+(JWT)
+SECRET_KEY=your-long-random-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=10080
+
+(LiveKit Cloud)
+LIVEKIT_API_KEY=your_livekit_api_key
+LIVEKIT_API_SECRET=your_livekit_api_secret
+LIVEKIT_URL=wss://your-project.livekit.cloud
+
+(Cloudinary)
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
 # Screenshots
 1. Home Page
 <img width="1920" height="1080" alt="Screenshot (229)" src="https://github.com/user-attachments/assets/5179b35c-496e-420b-952d-65d3b79de7de" />  
