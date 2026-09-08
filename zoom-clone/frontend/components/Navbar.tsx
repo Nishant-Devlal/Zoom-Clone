@@ -214,7 +214,7 @@ export default function Navbar() {
       >
         {user?.profile_picture ? (
           <img
-            src={`${API_URL}${user.profile_picture}`}
+            src={user.profile_picture}
             alt="Profile"
             className="navbar-avatar-image"
           />

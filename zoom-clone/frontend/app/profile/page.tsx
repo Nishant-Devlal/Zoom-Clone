@@ -304,7 +304,7 @@ export default function ProfilePage() {
 
             {profile?.profile_picture ? (
               <img
-                src={`${API_URL}${profile.profile_picture}`}
+                src={profile.profile_picture}
                 alt="Profile"
               />
             ) : (
