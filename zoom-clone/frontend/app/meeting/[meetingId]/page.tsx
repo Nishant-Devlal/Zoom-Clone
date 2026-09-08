@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import ParticipantPanel from "@/components/ParticipantPanel";
 import MeetingInfoModal from "@/components/MeetingInfoModal";
+import Navbar from "@/components/Navbar";
 
 import {
   LiveKitRoom,
@@ -22,6 +23,11 @@ import {
   Lock,
   Unlock,
   Info,
+  Home,
+  MessageSquare,
+  CalendarDays,
+  MoreHorizontal,
+  Settings,
 } from "lucide-react";
 
 import "@livekit/components-styles";
@@ -392,11 +398,6 @@ const toggleMeetingLock = async () => {
     }
   };
 
-  <MeetingControls 
-  isHost={isHost}
-  onEndMeeting={endMeeting}
-  />
-
   // ERROR
   if (error) {
     return (
@@ -461,173 +462,212 @@ const toggleMeetingLock = async () => {
 
   // MEETING ROOM
   return (
-    <div className="zoom-meeting-container">
+    <div className="zoom-meeting-workspace">
+      {/* The normal Zoom Workplace application navbar.
+          This does not affect authentication; your existing
+          meeting authentication above remains unchanged. */}
+      <Navbar />
 
-      {/* TOP BAR */}
-
-      <header className="meeting-topbar">
-
-        <div className="meeting-topbar-left">
-
-          <div className="meeting-brand">
-            <div className="meeting-brand-icon">
-              <Video size={19} />
-            </div>
-
-            <span>
-              Zoom Clone
-            </span>
-          </div>
-
-          <div className="meeting-info">
-            <strong>
-              {meetingTitle}
-            </strong>
-
-            <span>
-              ID: {meetingId}
-            </span>
-
-            {isMeetingLocked && (
-              <span className="meeting-locked-indicator">
-                <Lock size={12} />
-                Locked
-              </span>
-            )}
-          </div>
-
-        </div>
-
-        <div className="meeting-topbar-right">
-
-          {isHost ? (
+      <div className="zoom-meeting-workspace-body">
+        {/* Zoom-style left application navigation */}
+        <aside className="zoom-meeting-sidebar">
+          <nav className="zoom-meeting-sidebar-nav">
             <button
               type="button"
-              className="secure-badge"
-              onClick={toggleMeetingLock}
-              disabled={lockingMeeting}
-              title={
-                isMeetingLocked
-                  ? "Unlock meeting"
-                  : "Lock meeting"
-              }
+              className="zoom-meeting-sidebar-item"
+              onClick={() => router.push("/")}
+              title="Home"
             >
-              {isMeetingLocked ? (
-                <Unlock size={15} />
-              ) : (
-                <ShieldCheck size={15} />
-              )}
-
-              {lockingMeeting
-                ? "Updating..."
-                : isMeetingLocked
-                ? "Locked"
-                : "Secure"}
+              <Home size={21} strokeWidth={1.8} />
+              <span>Home</span>
             </button>
-          ) : (
-            <div className="secure-badge">
-              <ShieldCheck size={15} />
-              Secure
-            </div>
-          )}
 
-          <button
-            className="meeting-participants-button"
-            onClick={() => setShowParticipants(!showParticipants)}
-          >
-            <Users size={16} />
-            Participants
-          </button>
+            <button
+              type="button"
+              className="zoom-meeting-sidebar-item active"
+              onClick={() => router.push("/meetings")}
+              title="Meetings"
+            >
+              <CalendarDays size={21} strokeWidth={1.8} />
+              <span>Meetings</span>
+            </button>
+
+            <button
+              type="button"
+              className="zoom-meeting-sidebar-item"
+              onClick={() => router.push("/chat")}
+              title="Chat"
+            >
+              <MessageSquare size={21} strokeWidth={1.8} />
+              <span>Chat</span>
+            </button>
+
+            <button
+              type="button"
+              className="zoom-meeting-sidebar-item"
+              title="More"
+              onClick={() => {}}
+            >
+              <MoreHorizontal size={21} strokeWidth={1.8} />
+              <span>More</span>
+            </button>
+          </nav>
 
           <button
             type="button"
-            className="meeting-info-button"
-            onClick={() =>
-              setShowMeetingInfo(true)
-            }
-            title="Meeting information"
+            className="zoom-meeting-sidebar-item zoom-meeting-sidebar-settings"
+            onClick={() => router.push("/settings")}
+            title="Settings"
           >
-            <Info size={16} />
-            Info
+            <Settings size={21} strokeWidth={1.8} />
+            <span>Settings</span>
           </button>
+        </aside>
 
-          <button
-            className="invite-button"
-            onClick={copyInvitation}
-          >
-            {copied ? (
-              <>
-                <Check size={16} />
-                Copied
-              </>
-            ) : (
-              <>
-                <Copy size={16} />
-                Invite
-              </>
-            )}
-          </button>
+        {/* Main meeting application area */}
+        <main className="zoom-meeting-main">
+          {/* TOP BAR INSIDE MEETING */}
+          <header className="meeting-topbar">
+            <div className="meeting-topbar-left">
+              <div className="meeting-brand">
+                <div className="meeting-brand-icon">
+                  <Video size={19} />
+                </div>
+                <span>Zoom</span>
+              </div>
 
-        </div>
+              <div className="meeting-divider" />
 
-      </header>
+              <div className="meeting-info">
+                <strong>{meetingTitle}</strong>
+                <span>ID: {meetingId}</span>
 
+                {isMeetingLocked && (
+                  <span className="meeting-locked-indicator">
+                    <Lock size={12} />
+                    Locked
+                  </span>
+                )}
+              </div>
+            </div>
 
-      {/* LIVEKIT ROOM */}
+            <div className="meeting-topbar-right">
+              {isHost ? (
+                <button
+                  type="button"
+                  className="secure-badge"
+                  onClick={toggleMeetingLock}
+                  disabled={lockingMeeting}
+                  title={
+                    isMeetingLocked
+                      ? "Unlock meeting"
+                      : "Lock meeting"
+                  }
+                >
+                  {isMeetingLocked ? (
+                    <Unlock size={15} />
+                  ) : (
+                    <ShieldCheck size={15} />
+                  )}
 
-      <div className="meeting-video-area">
+                  {lockingMeeting
+                    ? "Updating..."
+                    : isMeetingLocked
+                    ? "Locked"
+                    : "Secure"}
+                </button>
+              ) : (
+                <div className="secure-badge">
+                  <ShieldCheck size={15} />
+                  Secure
+                </div>
+              )}
 
-        <LiveKitRoom
-          token={token}
-          serverUrl={serverUrl}
-          connect={true}
-          audio={true}
-          video={true}
-          className="custom-livekit-room"
+              <button
+                className="meeting-participants-button"
+                onClick={() => setShowParticipants(!showParticipants)}
+              >
+                <Users size={16} />
+                Participants
+              </button>
 
-          onConnected={() => {
-            console.log("CONNECTED TO LIVEKIT");
-          }}
+              <button
+                type="button"
+                className="meeting-info-button"
+                onClick={() => setShowMeetingInfo(true)}
+                title="Meeting information"
+              >
+                <Info size={16} />
+                Info
+              </button>
 
-          onDisconnected={(reason) => {
-            console.log("Disconnected:", reason);
-          }}
+              <button
+                className="invite-button"
+                onClick={copyInvitation}
+              >
+                {copied ? (
+                  <>
+                    <Check size={16} />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy size={16} />
+                    Invite
+                  </>
+                )}
+              </button>
+            </div>
+          </header>
 
-          onError={(error) => {
-            console.error("LIVEKIT ERROR:", error);
-          }}
-        >
-          <VideoConference />
+          {/* LIVEKIT MEETING STAGE */}
+          <div className="meeting-video-area">
+            <LiveKitRoom
+              token={token}
+              serverUrl={serverUrl}
+              connect={true}
+              audio={true}
+              video={true}
+              className="custom-livekit-room"
+              onConnected={() => {
+                console.log("CONNECTED TO LIVEKIT");
+              }}
+              onDisconnected={(reason) => {
+                console.log("Disconnected:", reason);
+              }}
+              onError={(error) => {
+                console.error("LIVEKIT ERROR:", error);
+              }}
+            >
+              <VideoConference />
 
-          {showParticipants && (
-            <ParticipantPanel
-              isHost={isHost}
-              onClose={() => setShowParticipants(false)}
-            />
-          )}
+              {showParticipants && (
+                <ParticipantPanel
+                  isHost={isHost}
+                  onClose={() => setShowParticipants(false)}
+                />
+              )}
 
-          {showMeetingInfo && (
-            <MeetingInfoModal
-              meetingTitle={meetingTitle}
-              meetingId={meetingId}
-              meetingLocked={isMeetingLocked}
-              startedAt={meetingData?.started_at}
-              endedAt={meetingData?.ended_at}
-              isHost={isHost}
-              onClose={() =>
-                setShowMeetingInfo(false)
-              }
-            />
-          )}
+              {showMeetingInfo && (
+                <MeetingInfoModal
+                  meetingTitle={meetingTitle}
+                  meetingId={meetingId}
+                  meetingLocked={isMeetingLocked}
+                  startedAt={meetingData?.started_at}
+                  endedAt={meetingData?.ended_at}
+                  isHost={isHost}
+                  onClose={() => setShowMeetingInfo(false)}
+                />
+              )}
 
-          <MeetingControls
-            isHost={isHost}
-            onEndMeeting={endMeeting}
-          />
-        </LiveKitRoom>
-
+              <MeetingControls
+                isHost={isHost}
+                onEndMeeting={endMeeting}
+              />
+            </LiveKitRoom>
+          </div>
+        </main>
       </div>
-
     </div>
   );
 }
