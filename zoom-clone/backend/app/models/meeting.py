@@ -2,12 +2,10 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from app.database import Base
 
-
 class Meeting(Base):
     __tablename__ = "meetings"
-
     id = Column(Integer, primary_key=True, index=True)
-
+    
     meeting_id = Column(
         String(20),
         unique=True,

@@ -1,46 +1,31 @@
 import os
-
 import cloudinary
 import cloudinary.uploader
-
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.models.user import User
 from app.utils.security import get_current_user
 
-
-# ---------------------------------------------------------
 # Cloudinary configuration
-# ---------------------------------------------------------
-
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-
 router = APIRouter(
     prefix="/api/profile",
     tags=["Profile"]
 )
 
-
-# ---------------------------------------------------------
 # Request schema
-# ---------------------------------------------------------
-
 class UpdateProfileRequest(BaseModel):
     name: str
 
 
-# ---------------------------------------------------------
 # Helper: return profile data
-# ---------------------------------------------------------
-
 def profile_response(user: User):
     return {
         "id": user.id,
@@ -49,22 +34,14 @@ def profile_response(user: User):
         "profile_picture": user.profile_picture,
     }
 
-
-# ---------------------------------------------------------
 # GET PROFILE
-# ---------------------------------------------------------
-
 @router.get("")
 def get_profile(
     current_user: User = Depends(get_current_user),
 ):
     return profile_response(current_user)
 
-
-# ---------------------------------------------------------
 # UPDATE PROFILE
-# ---------------------------------------------------------
-
 @router.put("")
 def update_profile(
     data: UpdateProfileRequest,
@@ -84,19 +61,13 @@ def update_profile(
             status_code=400,
             detail="Name cannot be longer than 100 characters"
         )
-
     current_user.name = name
-
     db.commit()
     db.refresh(current_user)
-
     return profile_response(current_user)
 
 
-# ---------------------------------------------------------
 # UPLOAD / CHANGE PROFILE PICTURE
-# ---------------------------------------------------------
-
 @router.post("/picture")
 async def upload_profile_picture(
     file: UploadFile = File(...),
@@ -104,10 +75,7 @@ async def upload_profile_picture(
     current_user: User = Depends(get_current_user),
 ):
 
-    # -----------------------------------------------------
     # Check Cloudinary configuration
-    # -----------------------------------------------------
-
     if not os.getenv("CLOUDINARY_CLOUD_NAME"):
         raise HTTPException(
             status_code=500,
@@ -126,10 +94,7 @@ async def upload_profile_picture(
             detail="Cloudinary API secret is not configured"
         )
 
-    # -----------------------------------------------------
     # Allowed MIME types
-    # -----------------------------------------------------
-
     allowed_types = {
         "image/jpeg",
         "image/png",
@@ -143,10 +108,7 @@ async def upload_profile_picture(
             detail="Only JPG, PNG, GIF and WEBP images are allowed"
         )
 
-    # -----------------------------------------------------
     # Read uploaded file
-    # -----------------------------------------------------
-
     content = await file.read()
 
     # 2 MB maximum size
@@ -158,9 +120,7 @@ async def upload_profile_picture(
             detail="Profile picture must be smaller than 2 MB"
         )
 
-    # -----------------------------------------------------
     # Upload to Cloudinary
-    # -----------------------------------------------------
 
     try:
         result = cloudinary.uploader.upload(
@@ -180,10 +140,7 @@ async def upload_profile_picture(
             detail="Failed to upload profile picture"
         )
 
-    # -----------------------------------------------------
     # Get Cloudinary URL
-    # -----------------------------------------------------
-
     picture_url = result.get("secure_url")
 
     if not picture_url:
@@ -192,10 +149,7 @@ async def upload_profile_picture(
             detail="Cloudinary did not return an image URL"
         )
 
-    # -----------------------------------------------------
     # Save Cloudinary URL in database
-    # -----------------------------------------------------
-
     current_user.profile_picture = picture_url
 
     db.commit()

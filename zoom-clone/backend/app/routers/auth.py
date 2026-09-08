@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.models.user import User
 from app.schemas.auth import (
@@ -20,11 +19,11 @@ router = APIRouter(
     tags=["Authentication"],
 )
 
-
 @router.post(
     "/signup",
     response_model=TokenResponse
 )
+
 def signup(
     data: SignupRequest,
     db: Session = Depends(get_db),
@@ -59,7 +58,6 @@ def signup(
         "token_type": "bearer",
         "user": user,
     }
-
 
 @router.post(
     "/login",

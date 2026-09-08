@@ -1,10 +1,7 @@
 import random
-
 from datetime import datetime, timezone
-
 from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session
-
 from app.database import get_db
 from app.models.meeting import Meeting
 from app.models.user import User
@@ -25,14 +22,9 @@ router = APIRouter(
     tags=["Meetings"]
 )
 
-
-# ---------------------------------------
 # MEETING ID GENERATION
-# ---------------------------------------
-
 def generate_meeting_id():
     return str(random.randint(100000000, 999999999))
-
 
 def get_unique_meeting_id(db: Session):
     while True:
@@ -47,11 +39,7 @@ def get_unique_meeting_id(db: Session):
         if not existing:
             return meeting_id
 
-
-# ---------------------------------------
 # CREATE INSTANT MEETING
-# ---------------------------------------
-
 @router.post("", response_model=MeetingResponse)
 def create_meeting(
     data: CreateMeetingRequest,
@@ -73,11 +61,7 @@ def create_meeting(
 
     return meeting
 
-
-# ---------------------------------------
 # SCHEDULE MEETING
-# ---------------------------------------
-
 @router.post("/schedule", response_model=MeetingResponse)
 def schedule_meeting(
     data: ScheduleMeetingRequest,
@@ -99,11 +83,7 @@ def schedule_meeting(
 
     return meeting
 
-
-# ---------------------------------------
 # GET UPCOMING MEETINGS
-# ---------------------------------------
-
 @router.get(
     "/upcoming/list",
     response_model=list[MeetingResponse]
@@ -126,11 +106,7 @@ def get_upcoming_meetings(
 
     return meetings
 
-
-# ---------------------------------------
 # GET PREVIOUS MEETINGS
-# ---------------------------------------
-
 @router.get(
     "/previous/list",
     response_model=list[MeetingResponse]
@@ -149,11 +125,7 @@ def get_previous_meetings(
 
     return meetings
 
-
-# ---------------------------------------
 # START MEETING
-# ---------------------------------------
-
 @router.post(
     "/{meeting_id}/start",
     response_model=MeetingResponse
@@ -192,10 +164,7 @@ def start_meeting(
     return meeting
 
 
-# ---------------------------------------
 # END MEETING
-# ---------------------------------------
-
 @router.post("/{meeting_id}/end", response_model=MeetingResponse)
 async def end_meeting(
     meeting_id: str,
@@ -239,10 +208,7 @@ async def end_meeting(
 
     return meeting
 
-# ---------------------------------------
 # GET ONE MEETING
-# ---------------------------------------
-
 @router.get(
     "/{meeting_id}",
     response_model=MeetingResponse
@@ -299,7 +265,6 @@ async def remove_participant(
             status_code=400,
             detail="Host cannot remove themselves",
         )
-
     try:
         await remove_livekit_participant(
             room_name=meeting.meeting_id,
@@ -310,7 +275,6 @@ async def remove_participant(
             "message": "Participant removed successfully",
             "participant_identity": participant_identity,
         }
-
     except Exception as e:
         print("Failed to remove participant:", e)
 
