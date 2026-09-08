@@ -3384,3 +3384,708 @@ body {
     padding: 0 7px !important;
   }
 }
+
+/* =========================================================
+   MOBILE MEETING TOPBAR BUTTONS
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  .meeting-topbar {
+    width: 100%;
+    height: 58px;
+    min-height: 58px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .meeting-topbar-left {
+    flex: 0 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .meeting-brand {
+    flex-shrink: 0;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .meeting-divider,
+  .meeting-info {
+    display: none !important;
+  }
+
+  /* Right-side controls */
+  .meeting-topbar-right {
+    flex: 0 0 auto;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    margin-left: auto;
+  }
+
+  /* IMPORTANT:
+     Do NOT make these 34px square on mobile.
+     Keep enough width for readable labels. */
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .invite-button,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 40px !important;
+
+    padding: 0 10px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 5px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 12px !important;
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+
+  /* Keep icons readable */
+  .meeting-topbar-right svg {
+    width: 15px !important;
+    height: 15px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Make sure text isn't hidden */
+  .meeting-topbar-right .secure-badge span,
+  .meeting-topbar-right .invite-button span,
+  .meeting-topbar-right .meeting-participants-button span,
+  .meeting-topbar-right .meeting-security-button span,
+  .meeting-topbar-right .meeting-info-button span {
+    display: inline !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* =========================================================
+   FINAL MOBILE MEETING ROOM FIX
+   Topbar + LiveKit Chat + Bottom Controls
+   ========================================================= */
+
+@media (max-width: 640px) {
+
+  /* =======================================================
+     1. MEETING TOP BAR
+     ======================================================= */
+
+  .meeting-topbar {
+    position: relative !important;
+
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+
+    padding: 0 8px !important;
+    gap: 6px !important;
+
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  /* LEFT SIDE - Zoom Clone */
+  .meeting-topbar-left {
+    position: relative !important;
+
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    overflow: hidden !important;
+  }
+
+  .meeting-brand {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    white-space: nowrap !important;
+    overflow: hidden !important;
+
+    font-size: 15px !important;
+    font-weight: 600 !important;
+  }
+
+  .meeting-brand-icon {
+    flex: 0 0 40px !important;
+
+    width: 40px !important;
+    height: 40px !important;
+
+    margin-right: 8px !important;
+  }
+
+  .meeting-brand-icon svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .meeting-divider,
+  .meeting-info {
+    display: none !important;
+  }
+
+
+  /* =======================================================
+     2. TOP RIGHT BUTTONS
+     ======================================================= */
+
+  .meeting-topbar-right {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+
+    gap: 5px !important;
+
+    margin-left: 5px !important;
+
+    position: relative !important;
+    z-index: 20 !important;
+  }
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .invite-button,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button {
+
+    position: relative !important;
+
+    flex: 0 0 auto !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+
+    height: 40px !important;
+    min-height: 40px !important;
+
+    padding: 0 9px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 5px !important;
+
+    border-radius: 8px !important;
+
+    white-space: nowrap !important;
+
+    font-size: 12px !important;
+    line-height: 1 !important;
+
+    box-sizing: border-box !important;
+  }
+
+  .meeting-topbar-right svg {
+    width: 15px !important;
+    height: 15px !important;
+
+    flex: 0 0 auto !important;
+  }
+
+  .meeting-topbar-right span {
+    white-space: nowrap !important;
+  }
+
+
+  /* =======================================================
+     3. LIVEKIT MEETING AREA
+     ======================================================= */
+
+  .meeting-video-area {
+    position: relative !important;
+
+    width: 100% !important;
+    min-width: 0 !important;
+
+    flex: 1 1 auto !important;
+
+    overflow: hidden !important;
+  }
+
+  .custom-livekit-room {
+    position: relative !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+
+
+  /* =======================================================
+     4. LIVEKIT BOTTOM CONTROL BAR
+     ======================================================= */
+
+  /*
+     Reserve the right side for End Meeting.
+     This prevents the LiveKit controls from sitting
+     underneath the red button.
+  */
+
+  .custom-livekit-room .lk-control-bar {
+
+    position: absolute !important;
+
+    left: 8px !important;
+    right: 150px !important;
+
+    bottom: 8px !important;
+
+    width: auto !important;
+    max-width: none !important;
+
+    height: 48px !important;
+    min-height: 48px !important;
+
+    margin: 0 !important;
+
+    padding: 4px 6px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 5px !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+
+    z-index: 100 !important;
+
+    box-sizing: border-box !important;
+  }
+
+  .custom-livekit-room .lk-control-bar > * {
+    flex: 0 0 auto !important;
+  }
+
+
+  /* =======================================================
+     5. CHAT PANEL
+     ======================================================= */
+
+  /*
+     IMPORTANT:
+     Do NOT set display:flex/grid/block here.
+
+     LiveKit itself controls whether chat is open or closed.
+     We only control its size and position.
+  */
+
+  .custom-livekit-room .lk-chat {
+
+    position: absolute !important;
+
+    top: 8px !important;
+    right: 8px !important;
+    left: auto !important;
+
+    bottom: 70px !important;
+
+    width: min(390px, calc(100% - 16px)) !important;
+
+    height: auto !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+
+    background: #111111 !important;
+
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 12px !important;
+
+    overflow: hidden !important;
+
+    z-index: 200 !important;
+
+    box-sizing: border-box !important;
+  }
+
+
+  /* =======================================================
+     6. CHAT HEADER
+     ======================================================= */
+
+  .custom-livekit-room .lk-chat-header {
+
+    position: relative !important;
+
+    width: 100% !important;
+    height: 52px !important;
+    min-height: 52px !important;
+
+    margin: 0 !important;
+
+    padding: 0 50px 0 16px !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    box-sizing: border-box !important;
+
+    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+
+    color: #ffffff !important;
+
+    font-size: 15px !important;
+    font-weight: 600 !important;
+
+    overflow: hidden !important;
+  }
+
+  /* Chat close X */
+
+  .custom-livekit-room .lk-chat-header .lk-close-button {
+
+    position: absolute !important;
+
+    top: 50% !important;
+    right: 10px !important;
+
+    transform: translateY(-50%) !important;
+
+    width: 32px !important;
+    height: 32px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: none !important;
+    border-radius: 6px !important;
+
+    background: transparent !important;
+
+    color: #ffffff !important;
+
+    z-index: 10 !important;
+  }
+
+  .custom-livekit-room .lk-chat-header .lk-close-button:hover {
+    background: rgba(255,255,255,0.1) !important;
+  }
+
+
+  /* =======================================================
+     7. CHAT MESSAGES
+     ======================================================= */
+
+  .custom-livekit-room .lk-chat-messages {
+
+    position: absolute !important;
+
+    top: 52px !important;
+    left: 0 !important;
+    right: 0 !important;
+
+    bottom: 64px !important;
+
+    width: 100% !important;
+    height: auto !important;
+
+    margin: 0 !important;
+
+    padding: 12px !important;
+
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    box-sizing: border-box !important;
+
+    display: block !important;
+  }
+
+
+  /* =======================================================
+     8. CHAT INPUT
+     ======================================================= */
+
+  .custom-livekit-room .lk-chat-form {
+
+    position: absolute !important;
+
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    width: 100% !important;
+
+    height: 64px !important;
+    min-height: 64px !important;
+
+    margin: 0 !important;
+
+    padding: 9px !important;
+
+    display: flex !important;
+    align-items: center !important;
+
+    gap: 8px !important;
+
+    background: #111111 !important;
+
+    border-top: 1px solid rgba(255,255,255,0.08) !important;
+
+    box-sizing: border-box !important;
+
+    z-index: 10 !important;
+  }
+
+  .custom-livekit-room .lk-chat-form-input {
+
+    flex: 1 1 auto !important;
+
+    width: auto !important;
+    min-width: 0 !important;
+
+    height: 42px !important;
+
+    margin: 0 !important;
+
+    padding: 0 12px !important;
+
+    border-radius: 8px !important;
+
+    background: #1f1f1f !important;
+
+    border: 1px solid #333333 !important;
+
+    color: #ffffff !important;
+
+    font-size: 13px !important;
+
+    box-sizing: border-box !important;
+  }
+
+  .custom-livekit-room .lk-chat-form-button {
+
+    flex: 0 0 auto !important;
+
+    width: 80px !important;
+    min-width: 80px !important;
+
+    height: 42px !important;
+
+    padding: 0 12px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 13px !important;
+
+    box-sizing: border-box !important;
+  }
+
+
+  /* =======================================================
+     9. END MEETING BUTTON
+     ======================================================= */
+
+  .zoom-meeting-container > .host-end-meeting {
+
+    position: absolute !important;
+
+    right: 8px !important;
+    bottom: 8px !important;
+
+    width: 136px !important;
+    min-width: 136px !important;
+    max-width: 136px !important;
+
+    height: 48px !important;
+
+    margin: 0 !important;
+    padding: 0 10px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 6px !important;
+
+    border-radius: 8px !important;
+
+    font-size: 12px !important;
+    white-space: nowrap !important;
+
+    z-index: 300 !important;
+  }
+
+  .zoom-meeting-container > .host-end-meeting svg {
+    width: 17px !important;
+    height: 17px !important;
+
+    flex-shrink: 0 !important;
+  }
+}
+
+
+/* =========================================================
+   EXTRA SMALL ANDROID PHONES
+   ========================================================= */
+
+@media (max-width: 420px) {
+
+  .meeting-topbar {
+    padding: 0 6px !important;
+  }
+
+  .meeting-topbar-left {
+    max-width: 125px !important;
+  }
+
+  .meeting-brand {
+    font-size: 14px !important;
+  }
+
+  .meeting-brand-icon {
+    width: 38px !important;
+    height: 38px !important;
+    flex-basis: 38px !important;
+    margin-right: 6px !important;
+  }
+
+  .meeting-topbar-right {
+    gap: 3px !important;
+  }
+
+  .meeting-topbar-right .secure-badge,
+  .meeting-topbar-right .invite-button,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-security-button,
+  .meeting-topbar-right .meeting-info-button {
+    height: 38px !important;
+    min-height: 38px !important;
+
+    padding: 0 7px !important;
+
+    font-size: 11px !important;
+  }
+
+  .meeting-topbar-right svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  /* Give the chat slightly more width on small phones */
+  .custom-livekit-room .lk-chat {
+    top: 6px !important;
+    right: 6px !important;
+    bottom: 68px !important;
+
+    width: calc(100% - 12px) !important;
+  }
+
+  /* Keep bottom controls clear of End Meeting */
+  .custom-livekit-room .lk-control-bar {
+    left: 6px !important;
+    right: 145px !important;
+    bottom: 7px !important;
+  }
+
+  .zoom-meeting-container > .host-end-meeting {
+    right: 6px !important;
+    bottom: 7px !important;
+
+    width: 132px !important;
+    min-width: 132px !important;
+    max-width: 132px !important;
+
+    height: 46px !important;
+
+    font-size: 11px !important;
+  }
+}
+
+
+/* =========================================================
+   VERY NARROW PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .meeting-topbar-left {
+    max-width: 105px !important;
+  }
+
+  .meeting-brand {
+    font-size: 13px !important;
+  }
+
+  /*
+     On extremely narrow screens, keep the Secure button
+     icon-only so the important Participants / Info / Invite
+     buttons remain usable.
+  */
+  .meeting-topbar-right .secure-badge {
+    width: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+  }
+
+  .meeting-topbar-right .secure-badge span {
+    display: none !important;
+  }
+
+  .meeting-topbar-right .invite-button,
+  .meeting-topbar-right .meeting-participants-button,
+  .meeting-topbar-right .meeting-info-button {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    font-size: 10px !important;
+  }
+
+  .custom-livekit-room .lk-control-bar {
+    right: 140px !important;
+  }
+
+  .zoom-meeting-container > .host-end-meeting {
+    width: 128px !important;
+    min-width: 128px !important;
+    max-width: 128px !important;
+  }
+}
