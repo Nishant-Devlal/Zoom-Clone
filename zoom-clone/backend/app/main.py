@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+
 from app.database import Base, engine
 from app.models.user import User
 from app.models.active_meeting_session import ActiveMeetingSession
@@ -16,13 +16,6 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Zoom Clone API",
     version="1.0.0",
-)
-
-# Serve uploaded files
-app.mount(
-    "/uploads",
-    StaticFiles(directory="uploads"),
-    name="uploads"
 )
 
 # CORS
