@@ -5710,3 +5710,23 @@ body {
     width: min(360px, calc(100% - 16px)) !important;
   }
 }
+
+
+/* =========================================================
+   MEETING ERROR SCREEN BUTTON SPACING
+   ========================================================= */
+.meeting-error-card > button:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.active-meeting-card {
+  margin-bottom: 10px;
+}
+
+.active-meeting-card button {
+  margin-bottom: 10px;
+}
+
+.active-meeting-card button:last-child {
+  margin-bottom: 0;
+}

@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Form
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.meeting import Meeting
+from app.models.active_meeting_session import ActiveMeetingSession
 from app.models.user import User
 from app.schemas.meeting import (
     CreateMeetingRequest,
@@ -197,6 +198,11 @@ async def end_meeting(
     # Mark meeting as ended in PostgreSQL
     meeting.ended_at = datetime.now(timezone.utc)
 
+    # Release all active meeting sessions
+    db.query(ActiveMeetingSession).filter(
+        ActiveMeetingSession.meeting_id == meeting.meeting_id
+    ).delete(synchronize_session=False)
+
     db.commit()
     db.refresh(meeting)
 
@@ -231,8 +237,6 @@ def get_meeting(
 
     return meeting
 
-
-@router.get("/{meeting_id}")
 @router.post("/{meeting_id}/remove-participant")
 async def remove_participant(
     meeting_id: str,
@@ -386,8 +390,6 @@ async def stop_participant_video(
             detail="Failed to stop participant video",
         )
         
-        
-@router.get("/{meeting_id}")
 @router.post("/{meeting_id}/lock")
 def lock_meeting(
     meeting_id: str,

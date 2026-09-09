@@ -130,6 +130,13 @@ export default function Home() {
               <UpcomingMeetings />
             </div>
 
+            {/* Recordings footer */}
+            <div className="calendar-footer">
+              <button type="button">
+                Open recordings
+                <span>›</span>
+              </button>
+            </div>
           </section>
 
           <div className="zoom-home-history">

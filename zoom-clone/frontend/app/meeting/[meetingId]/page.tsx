@@ -9,7 +9,10 @@ import Navbar from "@/components/Navbar";
 import {
   LiveKitRoom,
   VideoConference,
+  RoomAudioRenderer,
+  StartAudio,
   useRoomContext,
+  useLocalParticipant,
 } from "@livekit/components-react";
 
 import {
@@ -19,7 +22,6 @@ import {
   Copy,
   Check,
   PhoneOff,
-  Shield,
   Lock,
   Unlock,
   Info,
@@ -32,18 +34,48 @@ import {
 
 import "@livekit/components-styles";
 
+
+/* MEETING CONTROLS */
 function MeetingControls({
   isHost,
+  meetingId,
   onEndMeeting,
 }: {
   isHost: boolean;
+  meetingId: string;
   onEndMeeting: (room: any) => void;
 }) {
   const room = useRoomContext();
 
   const leaveMeeting = async () => {
-    await room.disconnect();
-    window.location.href = "/";
+    try {
+      const authToken = localStorage.getItem("access_token");
+
+      if (authToken) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/leave`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              meeting_id: meetingId,
+            }),
+          }
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Failed to release meeting session:",
+        error
+      );
+    } finally {
+      await room.disconnect();
+
+      window.location.href = "/";
+    }
   };
 
   const handleEndMeeting = () => {
@@ -73,6 +105,7 @@ function MeetingControls({
   );
 }
 
+/* MAIN MEETING PAGE */
 export default function MeetingPage() {
   const params = useParams();
   const router = useRouter();
@@ -80,6 +113,11 @@ export default function MeetingPage() {
   const [token, setToken] = useState<string | null>(null);
   const [serverUrl, setServerUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [activeMeeting, setActiveMeeting] = useState<{
+    meeting_id: string;
+    title: string;
+  } | null>(null);
+
   const [isHost, setIsHost] = useState(false);
   const [endingMeeting, setEndingMeeting] = useState(false);
   const [meetingTitle, setMeetingTitle] = useState("Meeting");
@@ -90,24 +128,26 @@ export default function MeetingPage() {
   const [isMeetingLocked, setIsMeetingLocked] = useState(false);
   const [lockingMeeting, setLockingMeeting] = useState(false);
 
-  // INITIALIZE MEETING
+  /* INITIALIZE MEETING */
   useEffect(() => {
-    if (!meetingId) return;
+    if (!meetingId) {
+      return;
+    }
+
+    let cancelled = false;
 
     async function initializeMeeting() {
       try {
-        // AUTHENTICATION
-        const authToken =
-          localStorage.getItem("access_token");
+        /* AUTHENTICATION */
+        const authToken = localStorage.getItem("access_token");
 
         if (!authToken) {
           router.replace("/login");
           return;
         }
 
-        // GET USER
-        const storedUser =
-          localStorage.getItem("user");
+        /* GET USER */
+        const storedUser = localStorage.getItem("user");
 
         if (!storedUser) {
           router.replace("/login");
@@ -116,7 +156,7 @@ export default function MeetingPage() {
 
         const user = JSON.parse(storedUser);
 
-        // GET MEETING
+        /* GET MEETING */
         const meetingResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}`,
           {
@@ -127,11 +167,29 @@ export default function MeetingPage() {
         );
 
         if (!meetingResponse.ok) {
-          throw new Error("Meeting not found");
+          let errorMessage =
+            "Meeting not found";
+
+          try {
+            const responseData =
+              await meetingResponse.json();
+
+            errorMessage =
+              responseData.detail ||
+              errorMessage;
+          } catch {
+            // Ignore JSON parsing error
+          }
+
+          throw new Error(errorMessage);
         }
 
         const meeting =
           await meetingResponse.json();
+
+        if (cancelled) {
+          return;
+        }
 
         setMeetingData(meeting);
 
@@ -143,12 +201,13 @@ export default function MeetingPage() {
           meeting.locked === true
         );
 
-        // CHECK HOST
+        /* CHECK HOST */
         const host =
           meeting.host_id === user.id;
+
         setIsHost(host);
 
-        // START MEETING
+        /* START MEETING */
         if (host) {
           const startResponse =
             await fetch(
@@ -163,13 +222,21 @@ export default function MeetingPage() {
             );
 
           if (!startResponse.ok) {
-            const data =
-              await startResponse.json();
+            let errorMessage =
+              "Unable to start meeting";
 
-            throw new Error(
-              data.detail ||
-                "Unable to start meeting"
-            );
+            try {
+              const data =
+                await startResponse.json();
+
+              errorMessage =
+                data.detail ||
+                errorMessage;
+            } catch {
+              // Ignore JSON parsing error
+            }
+
+            throw new Error(errorMessage);
           }
 
           console.log(
@@ -177,57 +244,96 @@ export default function MeetingPage() {
           );
         }
 
-        // GET LIVEKIT TOKEN
-        const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            room_name: meetingId,
-            participant_name: user.name,
-          }),
-        }
-      );
+        /* GET LIVEKIT TOKEN */
+        const tokenResponse =
+          await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/token`,
+            {
+              method: "POST",
 
-        const data =
-          await response.json();
+              headers: {
+                "Content-Type":
+                  "application/json",
 
-        if (!response.ok) {
+                Authorization:
+                  `Bearer ${authToken}`,
+              },
+
+              body: JSON.stringify({
+                room_name: meetingId,
+                participant_name: user.name,
+              }),
+            }
+          );
+
+        const tokenData =
+          await tokenResponse.json();
+
+        /* HANDLE TOKEN ERROR */
+        if (!tokenResponse.ok) {
+          if (
+            tokenResponse.status === 409 &&
+            tokenData.detail &&
+            typeof tokenData.detail === "object"
+          ) {
+            const detail = tokenData.detail;
+
+            if (detail.meeting_id) {
+              setActiveMeeting({
+                meeting_id: String(detail.meeting_id),
+                title:
+                  detail.meeting_title ||
+                  "Current Meeting",
+              });
+            }
+
+            throw new Error(
+              detail.message ||
+                "You are already in another meeting."
+            );
+          }
+
           throw new Error(
-            data.detail ||
-              "Token request failed"
+            typeof tokenData.detail === "string"
+              ? tokenData.detail
+              : "Token request failed"
           );
         }
 
-        if (!data.participant_token) {
+        /* VALIDATE TOKEN */
+        if (!tokenData.participant_token) {
           throw new Error(
             "Backend did not return participant token"
           );
         }
 
-        if (!data.server_url) {
+        if (!tokenData.server_url) {
           throw new Error(
             "Backend did not return server URL"
           );
         }
 
+        if (cancelled) {
+          return;
+        }
+
+        /* SAVE LIVEKIT CONNECTION DATA */
         setToken(
-          data.participant_token
+          tokenData.participant_token
         );
 
         setServerUrl(
-          data.server_url
+          tokenData.server_url
         );
-
       } catch (err) {
         console.error(
           "Meeting initialization error:",
           err
         );
+
+        if (cancelled) {
+          return;
+        }
 
         setError(
           err instanceof Error
@@ -239,9 +345,187 @@ export default function MeetingPage() {
 
     initializeMeeting();
 
+    return () => {
+      cancelled = true;
+    };
   }, [meetingId, router]);
 
-  // COPY INVITATION
+  /* Once the LiveKit token exists, tell the backend every
+     20 seconds that this user is still inside this meeting */
+  useEffect(() => {
+    if (!token || !meetingId) {
+      return;
+    }
+
+    const authToken =
+      localStorage.getItem("access_token");
+
+    if (!authToken) {
+      return;
+    }
+
+    let stopped = false;
+
+    const sendHeartbeat = async () => {
+      if (stopped) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/heartbeat`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+
+              Authorization:
+                `Bearer ${authToken}`,
+            },
+
+            body: JSON.stringify({
+              meeting_id: meetingId,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          console.warn(
+            "Heartbeat response:",
+            response.status
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Heartbeat failed:",
+          error
+        );
+      }
+    };
+
+    /* Send immediately.*/
+    sendHeartbeat();
+
+    /* Then every 20 seconds */
+    const interval = setInterval(
+      sendHeartbeat,
+      20_000
+    );
+
+    return () => {
+      stopped = true;
+      clearInterval(interval);
+    };
+  }, [token, meetingId]);
+
+  /* Release session when tab/browser closes or user used the browser back button.
+     Switching tabs does NOT release the session. */
+  useEffect(() => {
+    if (!token || !meetingId) {
+      return;
+    }
+
+    const releaseSession = () => {
+      const authToken =
+        localStorage.getItem("access_token");
+
+      if (!authToken) {
+        return;
+      }
+
+      fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/leave`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            meeting_id: meetingId,
+          }),
+          keepalive: true,
+        }
+      ).catch((error) => {
+        console.error(
+          "Failed to release meeting session:",
+          error
+        );
+      });
+    };
+
+    const handlePageHide = () => {
+      releaseSession();
+    };
+
+    const handlePopState = () => {
+      releaseSession();
+    };
+
+    window.addEventListener(
+      "pagehide",
+      handlePageHide
+    );
+
+    window.addEventListener(
+      "popstate",
+      handlePopState
+    );
+
+    return () => {
+      window.removeEventListener(
+        "pagehide",
+        handlePageHide
+      );
+
+      window.removeEventListener(
+        "popstate",
+        handlePopState
+      );
+    };
+  }, [token, meetingId]);
+
+  /* Used when the user leaves the meeting through the app
+     navigation/sidebar. Normal tab switching does NOT call
+     this function, so the meeting stays active.*/
+  const leaveAndNavigate = async (
+    destination: string
+  ) => {
+    try {
+      const authToken =
+        localStorage.getItem("access_token");
+
+      if (authToken && meetingId) {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/livekit/leave`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:
+                `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              meeting_id: meetingId,
+            }),
+            keepalive: true,
+          }
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Failed to release meeting session before navigation:",
+        error
+      );
+    } finally {
+      router.push(destination);
+    }
+  };
+
+  /* COPY INVITATION */
   const copyInvitation = async () => {
     const meetingLink =
       `${window.location.origin}/meeting/${meetingId}`;
@@ -263,7 +547,6 @@ export default function MeetingPage() {
       setTimeout(() => {
         setCopied(false);
       }, 2000);
-
     } catch (error) {
       console.error(
         "Copy failed:",
@@ -272,76 +555,80 @@ export default function MeetingPage() {
     }
   };
 
-// LOCK / UNLOCK MEETING
-const toggleMeetingLock = async () => {
-  if (!isHost || lockingMeeting) {
-    return;
-  }
-
-  try {
-    const authToken =
-      localStorage.getItem("access_token");
-
-    if (!authToken) {
-      router.replace("/login");
+  /* LOCK / UNLOCK MEETING */
+  const toggleMeetingLock = async () => {
+    if (!isHost || lockingMeeting) {
       return;
     }
 
-    setLockingMeeting(true);
+    try {
+      const authToken = localStorage.getItem("access_token");
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/lock`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
+      if (!authToken) {
+        router.replace("/login");
+        return;
       }
-    );
 
-    const data = await response.json();
+      setLockingMeeting(true);
 
-    if (!response.ok) {
-      throw new Error(
-        data.detail ||
-          "Unable to update meeting lock"
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/lock`,
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              `Bearer ${authToken}`,
+          },
+        }
       );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.detail ||
+            "Unable to update meeting lock"
+        );
+      }
+
+      setIsMeetingLocked(
+        data.locked === true
+      );
+
+      console.log(
+        data.locked
+          ? "Meeting locked"
+          : "Meeting unlocked"
+      );
+    } catch (error) {
+      console.error(
+        "Meeting lock error:",
+        error
+      );
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Unable to update meeting lock"
+      );
+    } finally {
+      setLockingMeeting(false);
     }
+  };
 
-    setIsMeetingLocked(data.locked === true);
-
-    console.log(
-      data.locked
-        ? "Meeting locked"
-        : "Meeting unlocked"
-    );
-
-  } catch (error) {
-    console.error(
-      "Meeting lock error:",
-      error
-    );
-
-    alert(
-      error instanceof Error
-        ? error.message
-        : "Unable to update meeting lock"
-    );
-
-  } finally {
-    setLockingMeeting(false);
-  }
-};
-
-  // END MEETING
+  /* END MEETING
+     Only the host can reach this function.
+     The backend deletes all active sessions for this meeting */
   const endMeeting = async (room: any) => {
     if (!isHost || endingMeeting) {
       return;
     }
 
-    const confirmed = window.confirm(
-      "Are you sure you want to end this meeting for everyone?"
-    );
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to end this meeting for everyone?"
+      );
 
     if (!confirmed) {
       return;
@@ -362,30 +649,40 @@ const toggleMeetingLock = async () => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/meetings/${meetingId}/end`,
         {
           method: "POST",
+
           headers: {
-            Authorization: `Bearer ${authToken}`,
+            Authorization:
+              `Bearer ${authToken}`,
           },
         }
       );
 
-      const data = await response.json();
+      const data =
+        await response.json();
 
       if (!response.ok) {
         throw new Error(
-          data.detail || "Unable to end meeting"
+          data.detail ||
+            "Unable to end meeting"
         );
       }
 
-      console.log("Meeting ended:", data);
+      console.log(
+        "Meeting ended:",
+        data
+      );
 
-      // Disconnect host from LiveKit
+      /* The backend has already marked meeting as ended, removed active meeting sessions
+       and deleted the LiveKit room.
+       Now disconnect this browser. */
       await room.disconnect();
 
-      // Return to dashboard
       router.push("/");
-
     } catch (error) {
-      console.error("End meeting error:", error);
+      console.error(
+        "End meeting error:",
+        error
+      );
 
       alert(
         error instanceof Error
@@ -397,13 +694,11 @@ const toggleMeetingLock = async () => {
     }
   };
 
-  // ERROR
+  /* ERROR SCREEN */
   if (error) {
     return (
       <div className="meeting-error-screen">
-
         <div className="meeting-error-card">
-
           <div className="meeting-error-icon">
             <Video size={30} />
           </div>
@@ -414,11 +709,40 @@ const toggleMeetingLock = async () => {
 
           <p>{error}</p>
 
-          <span>
-            Meeting ID: {meetingId}
-          </span>
+          {activeMeeting ? (
+            <div className="active-meeting-card">
+              <span className="active-meeting-label">
+                You are currently in:
+              </span>
+
+              <strong className="active-meeting-title">
+                {activeMeeting.title}
+              </strong>
+
+              <span className="active-meeting-id">
+                Meeting ID: {activeMeeting.meeting_id}
+              </span>
+
+              <button
+                type="button"
+                className="active-meeting-return"
+                onClick={() =>
+                  router.push(
+                    `/meeting/${activeMeeting.meeting_id}`
+                  )
+                }
+              >
+                Return to Meeting
+              </button>
+            </div>
+          ) : (
+            <span>
+              Meeting ID: {meetingId}
+            </span>
+          )}
 
           <button
+            type="button"
             onClick={() =>
               router.push("/")
             }
@@ -427,12 +751,11 @@ const toggleMeetingLock = async () => {
           </button>
 
         </div>
-
       </div>
     );
   }
 
-  // LOADING
+  /* LOADING SCREEN */
   if (!token || !serverUrl) {
     return (
       <div className="meeting-loading-screen">
@@ -459,44 +782,78 @@ const toggleMeetingLock = async () => {
     );
   }
 
-  // MEETING ROOM
+  /* MEETING ROOM */
   return (
     <div className="zoom-meeting-workspace">
 
       <Navbar />
 
       <div className="zoom-meeting-workspace-body">
+
+        {/* SIDEBAR */}
         <aside className="zoom-meeting-sidebar">
           <nav className="zoom-meeting-sidebar-nav">
+
+            {/* HOME */}
             <button
               type="button"
               className="zoom-meeting-sidebar-item"
-              onClick={() => router.push("/")}
+              onClick={() =>
+                leaveAndNavigate("/")
+              }
               title="Home"
             >
-              <Home size={21} strokeWidth={1.8} />
-              <span>Home</span>
+              <Home
+                size={21}
+                strokeWidth={1.8}
+              />
+
+              <span>
+                Home
+              </span>
             </button>
+
+            {/* MEETINGS */}
 
             <button
               type="button"
               className="zoom-meeting-sidebar-item active"
-              onClick={() => router.push("/meetings")}
+              onClick={() =>
+                leaveAndNavigate("/meetings")
+              }
               title="Meetings"
             >
-              <CalendarDays size={21} strokeWidth={1.8} />
-              <span>Meetings</span>
+              <CalendarDays
+                size={21}
+                strokeWidth={1.8}
+              />
+
+              <span>
+                Meetings
+              </span>
             </button>
+
+            {/* CHAT */}
 
             <button
               type="button"
               className="zoom-meeting-sidebar-item"
-              onClick={() => router.push("/chat")}
+              onClick={() =>
+                leaveAndNavigate("/chat")
+              }
               title="Chat"
             >
-              <MessageSquare size={21} strokeWidth={1.8} />
-              <span>Chat</span>
+              <MessageSquare
+                size={21}
+                strokeWidth={1.8}
+              />
+
+              <span>
+                Chat
+              </span>
             </button>
+
+            {/* MORE */}
 
             <button
               type="button"
@@ -504,66 +861,114 @@ const toggleMeetingLock = async () => {
               title="More"
               onClick={() => {}}
             >
-              <MoreHorizontal size={21} strokeWidth={1.8} />
-              <span>More</span>
+              <MoreHorizontal
+                size={21}
+                strokeWidth={1.8}
+              />
+
+              <span>
+                More
+              </span>
             </button>
+
           </nav>
+
+          {/* SETTINGS */}
 
           <button
             type="button"
             className="zoom-meeting-sidebar-item zoom-meeting-sidebar-settings"
-            onClick={() => router.push("/settings")}
+            onClick={() =>
+              router.push("/settings")
+            }
             title="Settings"
           >
-            <Settings size={21} strokeWidth={1.8} />
-            <span>Settings</span>
+            <Settings
+              size={21}
+              strokeWidth={1.8}
+            />
+
+            <span>
+              Settings
+            </span>
           </button>
+
         </aside>
 
-        {/* Main meeting application area */}
+        {/* MAIN MEETING AREA */}
         <main className="zoom-meeting-main">
-          {/* TOP BAR INSIDE MEETING */}
+
+          {/* TOP BAR */}
           <header className="meeting-topbar">
+
             <div className="meeting-topbar-left">
+
               <div className="meeting-brand">
+
                 <div className="meeting-brand-icon">
                   <Video size={19} />
                 </div>
-                <span>Zoom</span>
+
+                <span>
+                  Zoom
+                </span>
+
               </div>
 
               <div className="meeting-divider" />
 
               <div className="meeting-info">
-                <strong>{meetingTitle}</strong>
-                <span>ID: {meetingId}</span>
+
+                <strong>
+                  {meetingTitle}
+                </strong>
+
+                <span>
+                  ID: {meetingId}
+                </span>
 
                 {isMeetingLocked && (
                   <span className="meeting-locked-indicator">
+
                     <Lock size={12} />
+
                     Locked
+
                   </span>
                 )}
+
               </div>
+
             </div>
 
+            {/* TOP RIGHT CONTROLS */}
             <div className="meeting-topbar-right">
+
+              {/* SECURITY */}
               {isHost ? (
+
                 <button
                   type="button"
                   className="secure-badge"
-                  onClick={toggleMeetingLock}
-                  disabled={lockingMeeting}
+                  onClick={
+                    toggleMeetingLock
+                  }
+                  disabled={
+                    lockingMeeting
+                  }
                   title={
                     isMeetingLocked
                       ? "Unlock meeting"
                       : "Lock meeting"
                   }
                 >
+
                   {isMeetingLocked ? (
                     <Unlock size={15} />
                   ) : (
-                    <ShieldCheck size={15} />
+                    <ShieldCheck
+                      size={15}
+                    />
                   )}
 
                   {lockingMeeting
@@ -571,53 +976,88 @@ const toggleMeetingLock = async () => {
                     : isMeetingLocked
                     ? "Locked"
                     : "Secure"}
+
                 </button>
+
               ) : (
+
                 <div className="secure-badge">
-                  <ShieldCheck size={15} />
+
+                  <ShieldCheck
+                    size={15}
+                  />
+
                   Secure
+
                 </div>
+
               )}
 
+              {/* PARTICIPANTS */}
               <button
                 className="meeting-participants-button"
-                onClick={() => setShowParticipants(!showParticipants)}
+                onClick={() =>
+                  setShowParticipants(
+                    !showParticipants
+                  )
+                }
               >
+
                 <Users size={16} />
+
                 Participants
+
               </button>
 
+              {/* INFO */}
               <button
                 type="button"
                 className="meeting-info-button"
-                onClick={() => setShowMeetingInfo(true)}
+                onClick={() =>
+                  setShowMeetingInfo(
+                    true
+                  )
+                }
                 title="Meeting information"
               >
+
                 <Info size={16} />
+
                 Info
+
               </button>
 
+              {/* INVITE */}
               <button
                 className="invite-button"
-                onClick={copyInvitation}
+                onClick={
+                  copyInvitation
+                }
               >
+
                 {copied ? (
                   <>
                     <Check size={16} />
+
                     Copied
                   </>
                 ) : (
                   <>
                     <Copy size={16} />
+
                     Invite
                   </>
                 )}
+
               </button>
+
             </div>
+
           </header>
 
           {/* LIVEKIT MEETING STAGE */}
           <div className="meeting-video-area">
+
             <LiveKitRoom
               token={token}
               serverUrl={serverUrl}
@@ -625,25 +1065,42 @@ const toggleMeetingLock = async () => {
               audio={true}
               video={true}
               className="custom-livekit-room"
+
               onConnected={() => {
-                console.log("CONNECTED TO LIVEKIT");
+                console.log(
+                  "CONNECTED TO LIVEKIT"
+                );
               }}
+
               onDisconnected={(reason) => {
-                console.log("Disconnected:", reason);
+                console.log(
+                  "Disconnected:",
+                  reason
+                );
               }}
+
               onError={(error) => {
-                console.error("LIVEKIT ERROR:", error);
+                console.error(
+                  "LIVEKIT ERROR:",
+                  error
+                );
               }}
             >
+
               <VideoConference />
 
               {showParticipants && (
                 <ParticipantPanel
                   isHost={isHost}
-                  onClose={() => setShowParticipants(false)}
+                  onClose={() =>
+                    setShowParticipants(
+                      false
+                    )
+                  }
                 />
               )}
 
+              {/* MEETING INFO MODAL */}
               {showMeetingInfo && (
                 <MeetingInfoModal
                   meetingTitle={meetingTitle}
@@ -652,18 +1109,31 @@ const toggleMeetingLock = async () => {
                   startedAt={meetingData?.started_at}
                   endedAt={meetingData?.ended_at}
                   isHost={isHost}
-                  onClose={() => setShowMeetingInfo(false)}
+                  onClose={() =>
+                    setShowMeetingInfo(
+                      false
+                    )
+                  }
                 />
               )}
 
+              {/* MEETING EXIT CONTROLS */}
               <MeetingControls
                 isHost={isHost}
-                onEndMeeting={endMeeting}
+                meetingId={meetingId}
+                onEndMeeting={
+                  endMeeting
+                }
               />
+
             </LiveKitRoom>
+
           </div>
+
         </main>
+
       </div>
+
     </div>
   );
 }

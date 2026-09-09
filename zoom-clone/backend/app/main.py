@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.database import Base, engine
 from app.models.user import User
+from app.models.active_meeting_session import ActiveMeetingSession
 from app.routers.auth import router as auth_router
 from app.routers.meetings import router as meetings_router
 from app.routers.livekit import router as livekit_router

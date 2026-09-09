@@ -24,7 +24,6 @@ router = APIRouter(
 class UpdateProfileRequest(BaseModel):
     name: str
 
-
 # Helper: return profile data
 def profile_response(user: User):
     return {
@@ -121,7 +120,6 @@ async def upload_profile_picture(
         )
 
     # Upload to Cloudinary
-
     try:
         result = cloudinary.uploader.upload(
             content,
