@@ -122,18 +122,18 @@ Cloudinary - Image storage
 GitHub - Source control  
 
 # .env file format
-(PostgreSQL)
+(PostgreSQL)  
 DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 
-(JWT)
+(JWT)  
 SECRET_KEY=your-long-random-secret-key  
 
-(LiveKit Cloud)
+(LiveKit Cloud)  
 LIVEKIT_API_KEY=your_livekit_api_key  
 LIVEKIT_API_SECRET=your_livekit_api_secret  
 LIVEKIT_URL=wss://your-project.livekit.cloud  
 
-(Cloudinary)
+(Cloudinary)  
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name  
 CLOUDINARY_API_KEY=your_cloudinary_api_key  
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret  
