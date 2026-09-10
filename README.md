@@ -40,7 +40,6 @@ real-time video/audio communication, screen sharing, participant management, cha
 ### 🎥 Real-Time Video Conferencing
 
 Powered by **LiveKit Cloud**.
-
 - Real-time video
 - Real-time audio
 - Multiple participants
@@ -85,7 +84,7 @@ Designed to work across:
 - Desktop
 - Laptop
 - Tablet
-- Mobile-sized screens
+- Mobile
 
 
 #  Tech Stack
@@ -119,7 +118,7 @@ Cloudinary - Profile image storage
 ## Infrastructure & Deployment
 
 Vercel - Frontend & backend deployment  
-PostgreSQL - Production database  
+Neon PostgreSQL - Production database  
 LiveKit Cloud - Real-time video/audio infrastructure  
 Cloudinary - Image storage  
 GitHub - Source control  
@@ -130,8 +129,6 @@ DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 
 (JWT)
 SECRET_KEY=your-long-random-secret-key  
-ALGORITHM=HS256  
-ACCESS_TOKEN_EXPIRE_MINUTES=10080  
 
 (LiveKit Cloud)
 LIVEKIT_API_KEY=your_livekit_api_key  

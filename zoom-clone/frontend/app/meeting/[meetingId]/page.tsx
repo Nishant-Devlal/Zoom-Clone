@@ -34,7 +34,6 @@ import {
 
 import "@livekit/components-styles";
 
-
 /* MEETING CONTROLS */
 function MeetingControls({
   isHost,
@@ -1086,7 +1085,7 @@ export default function MeetingPage() {
                 );
               }}
             >
-
+              
               <VideoConference />
 
               {showParticipants && (
