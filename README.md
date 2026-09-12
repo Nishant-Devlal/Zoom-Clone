@@ -80,12 +80,10 @@ Meeting hosts can:
 
 ### 📱 Responsive UI
 Designed to work across:
-
 - Desktop
 - Laptop
 - Tablet
 - Mobile
-
 
 #  Tech Stack
 
@@ -124,18 +122,18 @@ Cloudinary - Image storage
 GitHub - Source control  
 
 # .env file format
-(PostgreSQL)
+(PostgreSQL)  
 DATABASE_URL=postgresql://USERNAME:PASSWORD@HOST:PORT/DATABASE_NAME
 
-(JWT)
+(JWT)  
 SECRET_KEY=your-long-random-secret-key  
 
-(LiveKit Cloud)
+(LiveKit Cloud)  
 LIVEKIT_API_KEY=your_livekit_api_key  
 LIVEKIT_API_SECRET=your_livekit_api_secret  
 LIVEKIT_URL=wss://your-project.livekit.cloud  
 
-(Cloudinary)
+(Cloudinary)  
 CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name  
 CLOUDINARY_API_KEY=your_cloudinary_api_key  
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret  
@@ -151,8 +149,8 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 <img width="1920" height="1080" alt="Screenshot (231)" src="https://github.com/user-attachments/assets/e2137a69-54f5-4c4d-83bb-cada8b0fec23" />
   
 4. Meeting Page
-<img width="1920" height="1080" alt="Screenshot (232)" src="https://github.com/user-attachments/assets/6024fd82-5877-40ae-9d70-2a7af195e2e7" />
-  
+<img width="1920" height="1080" alt="Screenshot (234)" src="https://github.com/user-attachments/assets/96ceb734-1082-4c66-9786-9e3981d1dd4c" />
+
 5. Settings Page
 <img width="1920" height="1080" alt="Screenshot (233)" src="https://github.com/user-attachments/assets/85027035-2429-4d61-ad1f-fec29fd111f5" />
   
